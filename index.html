@@ -117,9 +117,9 @@
     margin-bottom:12px}
   .book__head p{color:var(--text-muted)}
   .book__embed{max-width:940px;margin:0 auto;border:1px solid var(--border);
-    border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);min-height:640px;
+    border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);min-height:0;
     box-shadow:0 30px 80px -30px rgba(0,0,0,.7)}
-  .book__embed iframe{width:100%;min-height:700px;border:0;display:block}
+  .book__embed iframe{width:100%;border:0;display:block}
   .book__ph{min-height:640px;display:flex;flex-direction:column;align-items:center;
     justify-content:center;gap:14px;text-align:center;padding:40px}
   .book__ph svg{opacity:.5}
@@ -448,19 +448,26 @@ const CONFIG = {
     f.innerHTML = '<iframe src="'+vsl+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Training video"></iframe>';
   }
 
-  // ---- Booking embed ----
+  // ---- Booking / application embed ----
   const b = (CONFIG.bookingUrl||"").trim();
   if(b){
     const host = document.getElementById('bookEmbed');
-    let src = b;
-    if(/calendly\.com/.test(b)){
-      src = b + (b.includes('?')?'&':'?') + 'hide_gdpr_banner=1&background_color=101010&text_color=f2f2f2&primary_color=dc2626';
-    } else if(/tally\.so/.test(b)){
-      // normalize tally.so/r/ID -> embed url with transparent bg
-      const id = (b.match(/tally\.so\/r\/([\w-]+)/)||[])[1];
-      src = id ? "https://tally.so/embed/"+id+"?transparentBackground=1&hideTitle=1&dynamicHeight=1" : b;
+    if(/tally\.so/.test(b)){
+      // Tally: use the official embed script → auto-resizes to each step (no empty gaps)
+      // and redirects the TOP window on completion (so the booking page opens full-screen).
+      const id = (b.match(/tally\.so\/(?:r|embed)\/([\w-]+)/)||[])[1];
+      const src = "https://tally.so/embed/"+id+"?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1";
+      host.innerHTML = '<iframe data-tally-src="'+src+'" loading="lazy" width="100%" height="420" frameborder="0" marginheight="0" marginwidth="0" title="Apply and book"></iframe>';
+      const s=document.createElement('script'); s.src="https://tally.so/widgets/embed.js";
+      s.onload=function(){ if(window.Tally) Tally.loadEmbeds(); };
+      s.onerror=function(){ if(window.Tally) Tally.loadEmbeds(); };
+      document.body.appendChild(s);
+    } else if(/calendly\.com/.test(b)){
+      const src = b + (b.includes('?')?'&':'?') + 'hide_gdpr_banner=1&background_color=101010&text_color=f2f2f2&primary_color=dc2626';
+      host.innerHTML = '<iframe src="'+src+'" title="Book a call" loading="lazy" style="min-height:700px"></iframe>';
+    } else {
+      host.innerHTML = '<iframe src="'+b+'" title="Book a call" loading="lazy" style="min-height:700px"></iframe>';
     }
-    host.innerHTML = '<iframe src="'+src+'" title="Book a call" loading="lazy"></iframe>';
   }
 
   // ---- Logos ---- (real logos first, then dashed placeholder slots up to 5)
