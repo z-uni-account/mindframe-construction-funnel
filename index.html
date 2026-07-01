@@ -116,9 +116,9 @@
   .book__head h2{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-.02em;
     margin-bottom:12px}
   .book__head p{color:var(--text-muted)}
-  .book__embed{max-width:940px;margin:0 auto;border:1px solid var(--border);
-    border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);min-height:0;
-    box-shadow:0 30px 80px -30px rgba(0,0,0,.7)}
+  /* no card chrome — the transparent Tally form floats on the page, so Tally's
+     fixed embed min-height blends into the background instead of showing an empty box */
+  .book__embed{max-width:720px;margin:0 auto}
   .book__embed iframe{width:100%;border:0;display:block}
   .book__ph{min-height:640px;display:flex;flex-direction:column;align-items:center;
     justify-content:center;gap:14px;text-align:center;padding:40px}
