@@ -41,8 +41,9 @@
       <p>Choose a slot that works for you. You'll get a confirmation right away.</p>
     </div>
     <div class="cal-card">
-      <iframe id="ghl-cal" src="https://api.leadconnectorhq.com/widget/booking/A1zzJxrPKW1feORjJg4r"
-        scrolling="no" title="Book your call"></iframe>
+      <iframe id="A1zzJxrPKW1feORjJg4r_1751430000000"
+        src="https://api.leadconnectorhq.com/widget/booking/A1zzJxrPKW1feORjJg4r"
+        style="width:100%;border:none;overflow:hidden;" scrolling="no" title="Book your call"></iframe>
     </div>
     <div class="foot">&copy; <span id="y">2026</span> Mindframe Media</div>
   </div>
@@ -54,7 +55,8 @@
     // Best-effort prefill: if the form passed name/email/phone in the URL, hand them to the calendar.
     (function(){
       var p = new URLSearchParams(location.search);
-      var f = document.getElementById('ghl-cal');
+      var f = document.querySelector('.cal-card iframe');
+      if(!f) return;
       var map = {first_name:p.get('first_name'), last_name:p.get('last_name'),
                  name:p.get('name'), email:p.get('email'), phone:p.get('phone')};
       var extra = Object.keys(map).filter(function(k){return map[k];})
