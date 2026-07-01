@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Free Training | E3 Growth</title>
+<title>Free Training | Mindframe Media</title>
 <meta name="description" content="Watch the free training, then book your growth call. Booked jobs for construction companies, on demand." />
-<meta property="og:title" content="Watch the Free Training | E3 Growth" />
+<meta property="og:title" content="Watch the Free Training | Mindframe Media" />
 <meta property="og:description" content="How construction companies fill their calendar with qualified, ready-to-hire jobs, without chasing leads." />
 <meta property="og:type" content="website" />
 <meta name="theme-color" content="#080808" />
@@ -56,9 +56,8 @@
   .nav{position:sticky;top:0;z-index:50;background:rgba(11,11,11,.82);
     backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
   .nav__inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .nav__brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
-  .nav__brand img{height:30px;width:auto;display:block}
-  .nav__brand span{font-size:17px}
+  .nav__brand{display:flex;align-items:center;gap:2px;font-weight:800;letter-spacing:-.02em;font-size:18px}
+  .nav__brand b{color:var(--accent);font-weight:800}
   .nav__cta{font-size:14px;font-weight:600;background:var(--accent);color:#fff;
     padding:9px 18px;border-radius:var(--radius);transition:background .2s,transform .15s}
   .nav__cta:hover{background:var(--accent-hover);transform:translateY(-1px)}
@@ -228,10 +227,7 @@
   <!-- ══ NAV ══ -->
   <nav class="nav">
     <div class="container nav__inner">
-      <a class="nav__brand" href="#top">
-        <img src="assets/logos/e3-logo.png" alt="E3" />
-        <span>E3 Growth</span>
-      </a>
+      <a class="nav__brand" href="#top">Mindframe<b>Media</b></a>
       <a class="nav__cta" href="#book">Book a Call &rarr;</a>
     </div>
   </nav>
@@ -292,13 +288,8 @@
     <div class="container">
       <div class="logos__label">Trusted by growing construction &amp; trades companies</div>
       <div class="logos__row" id="logoRow">
-        <!-- Real client logos get injected here from CONFIG.logos.
-             Until then, these dashed slots show where they land. -->
-        <div class="logo-slot">Logo 1</div>
-        <div class="logo-slot">Logo 2</div>
-        <div class="logo-slot">Logo 3</div>
-        <div class="logo-slot">Logo 4</div>
-        <div class="logo-slot">Logo 5</div>
+        <!-- Real client logos are injected here from CONFIG.logos.
+             Any remaining spots show as dashed placeholder slots. -->
       </div>
     </div>
   </section>
@@ -313,7 +304,7 @@
       </div>
       <div class="compare">
         <div class="compare__col compare__col--bad">
-          <h3><span class="tag tag--bad">Without E3</span></h3>
+          <h3><span class="tag tag--bad">The Old Way</span></h3>
           <ul>
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Waiting on word of mouth and hoping the phone rings</li>
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Buying shared leads that 5 competitors already called</li>
@@ -323,7 +314,7 @@
           </ul>
         </div>
         <div class="compare__col compare__col--good">
-          <h3><span class="tag tag--good">With E3</span></h3>
+          <h3><span class="tag tag--good">With Mindframe</span></h3>
           <ul>
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Qualified homeowners booked straight to your calendar</li>
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Exclusive leads that belong only to you</li>
@@ -390,13 +381,13 @@
   <footer>
     <div class="container foot__inner">
       <div class="foot__brand">
-        <img src="assets/logos/e3-logo.png" alt="E3" />
-        <span>&copy; <span id="year">2026</span> E3 Growth. All rights reserved.</span>
+        <span style="font-weight:800;color:var(--text)">Mindframe<b style="color:var(--accent)">Media</b></span>
+        <span>&nbsp;&nbsp;&copy; <span id="year">2026</span> Mindframe Media. All rights reserved.</span>
       </div>
       <div class="foot__links">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
-        <a href="mailto:hello@e3growth.com">hello@e3growth.com</a>
+        <a href="mailto:hello@mindframemedia.com">hello@mindframemedia.com</a>
       </div>
     </div>
   </footer>
@@ -422,7 +413,9 @@ const CONFIG = {
   // 3) CLIENT LOGOS shown in the trust strip. Drop image files in  assets/logos/
   //    then list them here (path + name). Leave [] to keep the placeholder slots.
   //    Example: [{src:"assets/logos/acme.png", alt:"Acme"}, ...]
-  logos: [],
+  logos: [
+    {src:"assets/logos/e3-logo.png", alt:"E3"},
+  ],
 };
 
 /* ─── engine (no need to edit below) ─────────────────────────────────── */
@@ -462,12 +455,16 @@ const CONFIG = {
     host.innerHTML = '<iframe src="'+src+'" title="Book a call" loading="lazy"></iframe>';
   }
 
-  // ---- Logos ----
-  if(CONFIG.logos && CONFIG.logos.length){
+  // ---- Logos ---- (real logos first, then dashed placeholder slots up to 5)
+  (function(){
     const row = document.getElementById('logoRow');
-    row.innerHTML = CONFIG.logos.map(l =>
-      '<img src="'+l.src+'" alt="'+(l.alt||'')+'" />').join('');
-  }
+    const real = (CONFIG.logos||[]).map((l,i) =>
+      '<img src="'+l.src+'" alt="'+(l.alt||('Client '+(i+1)))+'" />');
+    const slots = Math.max(0, 5 - real.length);
+    let html = real.join('');
+    for(let i=0;i<slots;i++) html += '<div class="logo-slot">Client '+(real.length+i+1)+'</div>';
+    row.innerHTML = html;
+  })();
 })();
 </script>
 </body>
