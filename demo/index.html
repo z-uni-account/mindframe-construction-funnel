@@ -276,6 +276,32 @@
   .pill.risk { color: var(--warn); background: rgba(245,196,81,.1); border-color: rgba(245,196,81,.25); }
   .pill.delay { color: var(--crit); background: rgba(239,90,90,.1); border-color: rgba(239,90,90,.25); }
   .pill.sched { color: var(--steel-2); background: rgba(74,168,201,.1); border-color: rgba(74,168,201,.25); }
+  .pill.mute { color: var(--muted); background: rgba(126,158,190,.08); border-color: var(--line); }
+
+  /* call-outcome bars (reuse .funnel row markup) */
+  .oc-fill { height: 100%; border-radius: 6px; width: 0; transition: width 1s cubic-bezier(.22,1,.36,1); }
+  .oc-fill.win { background: linear-gradient(90deg, #2fa572, #38cf92); }
+  .oc-fill.blue { background: linear-gradient(90deg, #3d8fb0, #4aa8c9); }
+  .oc-fill.yellow { background: linear-gradient(90deg, #d9a93b, #f5c451); }
+  .oc-fill.red { background: linear-gradient(90deg, #d24a4a, #ef5a5a); }
+  .oc-fill.mute { background: linear-gradient(90deg, #3a4655, #566577); }
+
+  /* recent-calls table */
+  .ctable-wrap { overflow-x: auto; margin-top: 12px; }
+  table.ctable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.ctable th { text-align: left; font-family: var(--mono); font-size: 9.5px; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.ctable td { padding: 11px 12px; border-bottom: 1px solid var(--line-2); color: var(--ink-2); white-space: nowrap; vertical-align: middle; }
+  table.ctable tr:last-child td { border-bottom: 0; }
+  table.ctable tbody tr { transition: background .12s; }
+  table.ctable tbody tr:hover td { background: rgba(126,158,190,0.04); }
+  .c-caller { display: flex; align-items: center; gap: 10px; }
+  .c-name { color: var(--ink); font-weight: 600; }
+  .c-num { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  .c-dur { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .c-time { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .play { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel-2); display: grid; place-items: center; color: var(--steel-2); cursor: pointer; transition: border-color .15s, color .15s; }
+  .play:hover { border-color: var(--amber); color: var(--amber-2); }
+  .play svg { width: 11px; height: 11px; }
 
   /* lead sources bars */
   .src { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
@@ -417,6 +443,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h4v14H3z"/><path d="M10 5h4v9h-4z"/><path d="M17 5h4v6h-4z"/></svg>
           Pipeline
         </div>
+        <div class="nav-item" data-view="calls" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.6 4.2-2 1.3a11 11 0 0 0 5.9 5.9l1.3-2 4.2 1.6V17a2 2 0 0 1-2.1 2A15.5 15.5 0 0 1 3 6.1 2 2 0 0 1 5 4z"/></svg>
+          Calls
+        </div>
         <div class="nav-item soon" role="button" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V8l8-5 8 5v12"/><path d="M12 20v-5"/></svg>
           Projects <span class="tag-soon">18</span>
@@ -533,6 +563,41 @@
         <div class="board" id="board"></div>
         <p style="font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.4px;margin:16px 2px 0">Drag any card between stages — column totals and win rate recalculate instantly. Your board is saved locally.</p>
       </section>
+
+      <!-- ===== VIEW: CALL TRACKING ===== -->
+      <section class="view" id="view-calls" hidden>
+        <div class="kpis" id="callsKpis"></div>
+
+        <div class="grid g-2-1">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>Call Volume</h3><div class="sub">Last 14 days</div></div>
+              <div class="legend">
+                <span><i style="background:var(--amber)"></i> Answered</span>
+                <span><i style="background:rgba(126,158,190,0.45)"></i> Missed</span>
+              </div>
+            </div>
+            <div class="chart-wrap"><svg class="chart" id="callVolChart" viewBox="0 0 760 220"></svg></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><div><h3>Call Outcomes</h3><div class="sub">Last 7 days · 214 calls</div></div></div>
+            <div class="funnel" id="callOutcomes"></div>
+          </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Recent Calls</h3><div class="sub">Today</div></div><span class="pill sched">Live feed</span></div>
+            <div class="ctable-wrap">
+              <table class="ctable">
+                <thead><tr><th>Caller</th><th>Reason</th><th>Source</th><th>Duration</th><th>Outcome</th><th>Time</th><th></th></tr></thead>
+                <tbody id="callLog"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </div>
@@ -596,8 +661,13 @@
     document.querySelectorAll(".nav-item").forEach(function(n){ n.classList.toggle("active", n.getAttribute("data-view")===v); });
     document.getElementById("view-command").hidden = (v!=="command");
     document.getElementById("view-pipeline").hidden = (v!=="pipeline");
-    if(v==="command"){ crumbTop.textContent="Operations / Command Center"; crumbTitle.textContent="Command Center"; }
-    else { crumbTop.textContent="Operations / Pipeline"; crumbTitle.textContent="Sales Pipeline"; }
+    document.getElementById("view-calls").hidden = (v!=="calls");
+    var meta = {
+      command:["Operations / Command Center","Command Center"],
+      pipeline:["Operations / Pipeline","Sales Pipeline"],
+      calls:["Operations / Calls","Call Tracking"]
+    }[v] || ["Operations","BuildOps"];
+    crumbTop.textContent=meta[0]; crumbTitle.textContent=meta[1];
     window.scrollTo(0,0);
   }
   navItems.forEach(function(n){
@@ -764,6 +834,98 @@
       el.innerHTML='<span class="fe-dot" style="background:'+c+'"></span><div><div class="fe-txt">'+f[1]+'</div><div class="fe-time">'+f[2]+'</div></div>';
       wrap.appendChild(el);
     });
+  })();
+
+  /* =========================================================
+     CALL TRACKING PAGE
+     ========================================================= */
+  (function(){
+    // ---- KPIs (good = green regardless of arrow direction) ----
+    var CK=[
+      {label:"Calls · 7d", val:214, fmt:function(n){return Math.round(n)}, delta:"+9.2%", up:true, good:true, sub:"vs last week", color:"var(--amber)", ic:'<path d="M5 4h3l1.6 4.2-2 1.3a11 11 0 0 0 5.9 5.9l1.3-2 4.2 1.6V17a2 2 0 0 1-2.1 2A15.5 15.5 0 0 1 3 6.1 2 2 0 0 1 5 4z"/>'},
+      {label:"Answer Rate", val:88, fmt:function(n){return Math.round(n)+"%"}, delta:"+3.1pt", up:true, good:true, sub:"188 answered", color:"#38cf92", ic:'<path d="M20 6 9 17l-5-5"/>'},
+      {label:"Missed Calls", val:26, fmt:function(n){return Math.round(n)}, delta:"-14%", up:false, good:true, sub:"all called back", color:"#f5c451", ic:'<circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/>'},
+      {label:"Booked From Calls", val:39, fmt:function(n){return Math.round(n)}, delta:"+12.0%", up:true, good:true, sub:"18% of answered", color:"#4aa8c9", ic:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>'},
+      {label:"Speed to Answer", val:11, fmt:function(n){return Math.round(n)+"s"}, delta:"-4s", up:false, good:true, sub:"target < 20s", color:"#7f7de0", ic:'<circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/>'}
+    ];
+    var wrap=document.getElementById("callsKpis");
+    CK.forEach(function(k){
+      var el=document.createElement("div"); el.className="kpi"; el.style.setProperty("--kc",k.color);
+      el.innerHTML='<div class="kpi-top"><span class="kpi-label">'+k.label+'</span>'+
+        '<span class="kpi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+k.ic+'</svg></span></div>'+
+        '<div class="kpi-val">'+k.fmt(0)+'</div>'+
+        '<div class="kpi-foot"><span class="delta '+(k.good?"up":"down")+'">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+(k.up?'<path d="M7 17 17 7M9 7h8v8"/>':'<path d="M7 7l10 10M17 9v8H9"/>')+'</svg>'+k.delta+'</span>'+
+          '<span class="kpi-sub">'+k.sub+'</span></div>';
+      wrap.appendChild(el);
+      countUp(el.querySelector(".kpi-val"), k.val, k.fmt, 1100);
+    });
+
+    // ---- Call volume (14 days, answered + missed stacked) ----
+    (function(){
+      var ans=[24,28,22,31,27,33,19,26,30,25,34,29,36,31];
+      var mis=[3,4,2,5,3,4,6,3,4,3,5,4,3,2];
+      var svg=document.getElementById("callVolChart");
+      var W=760,H=220,padL=8,padR=8,padT=14,padB=22, iw=W-padL-padR, ih=H-padT-padB, max=42;
+      var n=ans.length, gap=8, bw=(iw-gap*(n-1))/n;
+      var grid="";
+      for(var g=0;g<=3;g++){ var yy=padT+g/3*ih; grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(126,158,190,0.08)"/>'; grid+='<text x="'+padL+'" y="'+(yy-3)+'" fill="#566577" font-family="ui-monospace,monospace" font-size="9">'+Math.round(max-g/3*max)+'</text>'; }
+      var bars="";
+      for(var i=0;i<n;i++){
+        var x=padL+i*(bw+gap);
+        var aH=ans[i]/max*ih, mH=mis[i]/max*ih, yA=padT+ih-aH, yM=yA-mH;
+        bars+='<rect x="'+x.toFixed(1)+'" y="'+yA.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+aH.toFixed(1)+'" rx="2" fill="#ff7a1a" opacity=".92"/>';
+        bars+='<rect x="'+x.toFixed(1)+'" y="'+yM.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+mH.toFixed(1)+'" rx="2" fill="rgba(126,158,190,0.4)"/>';
+      }
+      svg.innerHTML=grid+bars+
+        '<text x="'+padL+'" y="'+(H-6)+'" fill="#566577" font-family="ui-monospace,monospace" font-size="9">14 days ago</text>'+
+        '<text x="'+(W-padR)+'" y="'+(H-6)+'" fill="#566577" font-family="ui-monospace,monospace" font-size="9" text-anchor="end">Today</text>';
+    })();
+
+    // ---- Call outcomes ----
+    (function(){
+      var out=[["Booked appointment",39,"win"],["Quote requested",72,"blue"],["Voicemail",24,"yellow"],["No answer / missed",26,"red"],["Not a fit / spam",53,"mute"]];
+      var total=214, max=72, wrap=document.getElementById("callOutcomes");
+      out.forEach(function(o,i){
+        var pct=Math.round(o[1]/total*100);
+        var row=document.createElement("div"); row.className="fn-row";
+        row.innerHTML='<div class="fn-top"><span class="fn-name">'+o[0]+'</span><span class="fn-val">'+o[1]+' · '+pct+'%</span></div>'+
+          '<div class="fn-bar"><div class="oc-fill '+o[2]+'"></div></div>';
+        wrap.appendChild(row);
+        var fill=row.querySelector(".oc-fill");
+        setTimeout(function(){ fill.style.width=(o[1]/max*100)+"%"; }, reduce?0:120+i*80);
+      });
+    })();
+
+    // ---- Recent calls log ----
+    (function(){
+      var log=[
+        ["Amanda Reyes","(951) 442-0198","EV charger install","Meta Ads","4:12","Booked","ontrack","9:12 AM","MR"],
+        ["Robert Chen","(714) 330-5521","200A panel upgrade","Google","3:48","Quote requested","sched","9:41 AM","MR"],
+        ["Unknown caller","(818) 774-2093","—","Meta Ads","0:00","Missed","delay","10:05 AM",""],
+        ["Denise Park","(562) 210-8830","Half the house lost power","Referral","6:20","Booked · emergency","ontrack","10:23 AM","TR"],
+        ["James Sullivan","(626) 559-1174","Standby generator service","Repeat","2:35","Quote requested","sched","11:02 AM","MR"],
+        ["Karen Willis","(949) 803-6642","Recessed lighting (kitchen)","Website","0:38","Voicemail","risk","11:30 AM",""],
+        ["Marcus Bell","(714) 208-9917","EV charger + subpanel","Referral","5:04","Booked","ontrack","12:15 PM","TR"],
+        ["Auto-warranty robocall","—","Spam / robocall","—","0:22","Not a fit","mute","12:48 PM",""],
+        ["Priya Nair","(818) 442-7756","Powerwall install","Meta Ads","4:55","Quote requested","sched","1:20 PM","MR"],
+        ["Owen Whitaker","(310) 665-3390","Service upgrade","Google","0:00","Missed · called back","risk","1:52 PM","TR"]
+      ];
+      var tb=document.getElementById("callLog");
+      log.forEach(function(c){
+        var av = c[8] ? '<span class="card-av">'+c[8]+'</span>' : '<span class="card-av" style="color:var(--faint)">—</span>';
+        var tr=document.createElement("tr");
+        tr.innerHTML=
+          '<td><div class="c-caller">'+av+'<div><div class="c-name">'+c[0]+'</div><div class="c-num">'+c[1]+'</div></div></div></td>'+
+          '<td>'+c[2]+'</td>'+
+          '<td><span class="src-chip">'+c[3]+'</span></td>'+
+          '<td class="c-dur">'+c[4]+'</td>'+
+          '<td><span class="pill '+c[6]+'">'+c[5]+'</span></td>'+
+          '<td class="c-time">'+c[7]+'</td>'+
+          '<td><span class="play" role="button" tabindex="0" title="Play recording"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></td>';
+        tb.appendChild(tr);
+      });
+    })();
   })();
 
   /* =========================================================
