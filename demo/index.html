@@ -303,6 +303,16 @@
   .play:hover { border-color: var(--amber); color: var(--amber-2); }
   .play svg { width: 11px; height: 11px; }
 
+  /* cost & roi page */
+  .delta.flat { color: var(--muted); }
+  table.ctable th.num, table.ctable td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  table.ctable tr.total td { border-top: 1px solid var(--line); border-bottom: 0; font-weight: 700; color: var(--ink); background: rgba(126,158,190,0.03); }
+  .cost-foot { display: flex; gap: 14px; margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+  .cost-foot > div { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .cost-foot span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
+  .cost-foot b { font-family: var(--mono); font-size: 21px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cost-foot b.roas { color: var(--amber-2); }
+
   /* lead sources bars */
   .src { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
   .src-row { display: grid; grid-template-columns: 96px 1fr 44px; align-items: center; gap: 10px; }
@@ -446,6 +456,10 @@
         <div class="nav-item" data-view="calls" role="button" tabindex="0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.6 4.2-2 1.3a11 11 0 0 0 5.9 5.9l1.3-2 4.2 1.6V17a2 2 0 0 1-2.1 2A15.5 15.5 0 0 1 3 6.1 2 2 0 0 1 5 4z"/></svg>
           Calls
+        </div>
+        <div class="nav-item" data-view="costs" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Cost &amp; ROI
         </div>
         <div class="nav-item soon" role="button" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V8l8-5 8 5v12"/><path d="M12 20v-5"/></svg>
@@ -598,6 +612,50 @@
           </div>
         </div>
       </section>
+
+      <!-- ===== VIEW: COST & ROI (transparency) ===== -->
+      <section class="view" id="view-costs" hidden>
+        <div class="kpis" id="costKpis"></div>
+
+        <div class="grid g-2-1">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>Cost Efficiency Trend</h3><div class="sub">Cost per lead vs cost per booked call · 8 weeks</div></div>
+              <div class="legend">
+                <span><i style="background:var(--steel)"></i> Cost / lead</span>
+                <span><i style="background:var(--amber)"></i> Cost / booked</span>
+              </div>
+            </div>
+            <div class="chart-wrap"><svg class="chart" id="costTrend" viewBox="0 0 760 240" preserveAspectRatio="none"></svg></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><div><h3>Where Your Money Goes</h3><div class="sub">Last 30 days</div></div></div>
+            <div class="funnel" id="costLadder"></div>
+            <div class="cost-foot">
+              <div><span>Revenue from ads</span><b>$184,200</b></div>
+              <div><span>Blended ROAS</span><b class="roas">18.7&times;</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Cost by Channel</h3><div class="sub">Actual spend &divide; tracked results · no markup</div></div><span class="pill sched">Last 30 days</span></div>
+            <div class="ctable-wrap">
+              <table class="ctable" id="channelTable">
+                <thead><tr>
+                  <th>Channel</th><th class="num">Spend</th><th class="num">Leads</th><th class="num">Cost / Lead</th>
+                  <th class="num">Booked</th><th class="num">Cost / Booked</th><th class="num">Won</th><th class="num">Cost / Job</th>
+                  <th class="num">Revenue</th><th class="num">ROAS</th>
+                </tr></thead>
+                <tbody id="channelBody"></tbody>
+              </table>
+            </div>
+            <p style="font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.4px;margin:14px 2px 0">Every figure is real ad spend divided by tracked results. Leads, booked calls, and won jobs are attributed by call tracking and form source. No agency markup on ad spend.</p>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </div>
@@ -662,10 +720,12 @@
     document.getElementById("view-command").hidden = (v!=="command");
     document.getElementById("view-pipeline").hidden = (v!=="pipeline");
     document.getElementById("view-calls").hidden = (v!=="calls");
+    document.getElementById("view-costs").hidden = (v!=="costs");
     var meta = {
       command:["Operations / Command Center","Command Center"],
       pipeline:["Operations / Pipeline","Sales Pipeline"],
-      calls:["Operations / Calls","Call Tracking"]
+      calls:["Operations / Calls","Call Tracking"],
+      costs:["Transparency / Cost & ROI","Cost & ROI"]
     }[v] || ["Operations","BuildOps"];
     crumbTop.textContent=meta[0]; crumbTitle.textContent=meta[1];
     window.scrollTo(0,0);
@@ -925,6 +985,101 @@
           '<td><span class="play" role="button" tabindex="0" title="Play recording"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></td>';
         tb.appendChild(tr);
       });
+    })();
+  })();
+
+  /* =========================================================
+     COST & ROI PAGE (transparency)
+     ========================================================= */
+  (function(){
+    var aUp='<path d="M7 17 17 7M9 7h8v8"/>', aDown='<path d="M7 7l10 10M17 9v8H9"/>', aFlat='<path d="M5 12h14"/>';
+    var usd=function(n){ return "$"+Math.round(n)};
+    var CK=[
+      {label:"Ad Spend · 30d", val:9840, fmt:moneyFull, arrow:aFlat, tone:"flat", delta:"≈ $328 / day", sub:"across 4 channels", color:"var(--amber)", ic:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'},
+      {label:"Cost / Lead", val:30, fmt:usd, arrow:aDown, tone:"good", delta:"-$6 vs last mo", sub:"328 leads", color:"#4aa8c9", ic:'<circle cx="9" cy="8" r="3"/><path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>'},
+      {label:"Cost / Booked Call", val:103, fmt:usd, arrow:aDown, tone:"good", delta:"-$14", sub:"96 booked", color:"#38cf92", ic:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>'},
+      {label:"Cost / Job Won", val:364, fmt:usd, arrow:aDown, tone:"good", delta:"-8%", sub:"27 jobs won", color:"#7f7de0", ic:'<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>'},
+      {label:"Blended ROAS", val:18.7, fmt:function(n){return n.toFixed(1)+"×"}, arrow:aUp, tone:"good", delta:"+2.1×", sub:"$184K from ads", color:"#f5c451", ic:'<path d="M4 4v16h16"/><path d="M8 15l3-4 3 2 4-6"/>'}
+    ];
+    var wrap=document.getElementById("costKpis");
+    CK.forEach(function(k){
+      var cls = k.tone==="good"?"up":k.tone==="bad"?"down":"flat";
+      var el=document.createElement("div"); el.className="kpi"; el.style.setProperty("--kc",k.color);
+      el.innerHTML='<div class="kpi-top"><span class="kpi-label">'+k.label+'</span>'+
+        '<span class="kpi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+k.ic+'</svg></span></div>'+
+        '<div class="kpi-val">'+k.fmt(0)+'</div>'+
+        '<div class="kpi-foot"><span class="delta '+cls+'">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+k.arrow+'</svg>'+k.delta+'</span>'+
+          '<span class="kpi-sub">'+k.sub+'</span></div>';
+      wrap.appendChild(el);
+      countUp(el.querySelector(".kpi-val"), k.val, k.fmt, 1100);
+    });
+
+    // ---- Cost efficiency trend (two lines) ----
+    (function(){
+      var cpl=[36,35,34,33,32,31,31,30];
+      var cpb=[122,119,116,112,110,107,105,103];
+      var svg=document.getElementById("costTrend");
+      var W=760,H=240,padL=8,padR=8,padT=16,padB=26, iw=W-padL-padR, ih=H-padT-padB, max=130;
+      function X(i){ return padL + i/(cpl.length-1)*iw; }
+      function Y(v){ return padT + (1-v/max)*ih; }
+      function smooth(data){
+        var p=data.map(function(v,i){return [X(i),Y(v)];});
+        var d="M"+p[0][0]+" "+p[0][1];
+        for(var i=0;i<p.length-1;i++){ var cx=(p[i][0]+p[i+1][0])/2; d+=" C"+cx+" "+p[i][1]+" "+cx+" "+p[i+1][1]+" "+p[i+1][0]+" "+p[i+1][1]; }
+        return d;
+      }
+      var grid="";
+      for(var g=0;g<=4;g++){ var yy=padT+g/4*ih; grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(126,158,190,0.08)"/>'; grid+='<text x="'+padL+'" y="'+(yy-4)+'" fill="#566577" font-family="ui-monospace,monospace" font-size="9">$'+Math.round(max-g/4*max)+'</text>'; }
+      var labels=""; for(var i=0;i<cpl.length;i++){ labels+='<text x="'+X(i)+'" y="'+(H-8)+'" fill="#566577" font-family="ui-monospace,monospace" font-size="9" text-anchor="middle">W'+(i+1)+'</text>'; }
+      var ex=X(cpl.length-1);
+      svg.innerHTML=grid+labels+
+        '<path d="'+smooth(cpb)+'" fill="none" stroke="#ff7a1a" stroke-width="2.4" stroke-linecap="round"/>'+
+        '<path d="'+smooth(cpl)+'" fill="none" stroke="#4aa8c9" stroke-width="2.2" stroke-linecap="round"/>'+
+        '<circle cx="'+ex+'" cy="'+Y(cpb[cpb.length-1])+'" r="4" fill="#ff7a1a" stroke="#0b1017" stroke-width="2"/>'+
+        '<circle cx="'+ex+'" cy="'+Y(cpl[cpl.length-1])+'" r="4" fill="#4aa8c9" stroke="#0b1017" stroke-width="2"/>';
+    })();
+
+    // ---- Cost ladder (where the money goes) ----
+    (function(){
+      var rows=[["Ad spend","$9,840",100,true],["Leads","328 · $30 ea",100,false],["Booked calls","96 · $103 ea",29,false],["Jobs won","27 · $364 ea",8,false]];
+      var wrap=document.getElementById("costLadder");
+      rows.forEach(function(r,i){
+        var row=document.createElement("div"); row.className="fn-row";
+        row.innerHTML='<div class="fn-top"><span class="fn-name">'+r[0]+'</span><span class="fn-val">'+r[1]+'</span></div>'+
+          '<div class="fn-bar"><div class="fn-fill'+(r[3]?" win":"")+'" style="width:0"></div></div>';
+        wrap.appendChild(row);
+        var fill=row.querySelector(".fn-fill");
+        setTimeout(function(){ fill.style.width=r[2]+"%"; }, reduce?0:120+i*90);
+      });
+    })();
+
+    // ---- Cost by channel table ----
+    (function(){
+      var ch=[
+        ["Meta Ads",5900,196,58,15,101500],
+        ["Google Ads",2640,74,24,8,58900],
+        ["Website / SEO",1300,33,9,3,16400],
+        ["Referral",0,25,5,1,7400]
+      ];
+      var tb=document.getElementById("channelBody");
+      var d=function(n){ return "$"+Math.round(n).toLocaleString("en-US"); };
+      var per=function(sp,c){ return c? "$"+Math.round(sp/c).toLocaleString("en-US") : "—"; };
+      var t={spend:0,leads:0,booked:0,won:0,rev:0};
+      ch.forEach(function(c){
+        t.spend+=c[1]; t.leads+=c[2]; t.booked+=c[3]; t.won+=c[4]; t.rev+=c[5];
+        var roas = c[1]? (c[5]/c[1]).toFixed(1)+"×" : "—";
+        var tr=document.createElement("tr");
+        tr.innerHTML='<td>'+c[0]+'</td><td class="num">'+d(c[1])+'</td><td class="num">'+c[2]+'</td><td class="num">'+per(c[1],c[2])+
+          '</td><td class="num">'+c[3]+'</td><td class="num">'+per(c[1],c[3])+'</td><td class="num">'+c[4]+'</td><td class="num">'+per(c[1],c[4])+
+          '</td><td class="num">'+d(c[5])+'</td><td class="num">'+roas+'</td>';
+        tb.appendChild(tr);
+      });
+      var tr=document.createElement("tr"); tr.className="total";
+      tr.innerHTML='<td>All channels</td><td class="num">'+d(t.spend)+'</td><td class="num">'+t.leads+'</td><td class="num">'+per(t.spend,t.leads)+
+        '</td><td class="num">'+t.booked+'</td><td class="num">'+per(t.spend,t.booked)+'</td><td class="num">'+t.won+'</td><td class="num">'+per(t.spend,t.won)+
+        '</td><td class="num">'+d(t.rev)+'</td><td class="num">'+(t.rev/t.spend).toFixed(1)+'×</td>';
+      tb.appendChild(tr);
     })();
   })();
 
