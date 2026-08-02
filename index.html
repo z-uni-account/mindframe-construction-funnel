@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Free Training | Mindframe Media</title>
-<meta name="description" content="Watch the free training, then book your growth call. Booked jobs for construction companies, on demand." />
-<meta property="og:title" content="Watch the Free Training | Mindframe Media" />
-<meta property="og:description" content="How construction companies fill their calendar with qualified, ready-to-hire jobs, without chasing leads." />
+<title>Orange County Construction Companies | Mindframe Media</title>
+<meta name="description" content="The demand system built for three Orange County construction companies. Remodels, additions, ADUs, custom builds. Homeowners vetted before they reach you." />
+<meta property="og:title" content="The Demand System Built For Three Orange County Construction Companies" />
+<meta property="og:description" content="We run the ads, vet every homeowner before they reach you, and warm them before the inspection. Only 3 companies in Orange County will be selected." />
 <meta property="og:type" content="website" />
 <meta name="theme-color" content="#080808" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -104,6 +104,12 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   .hero__sub{font-size:clamp(1rem,2.4vw,1.22rem);color:var(--text-muted);
     max-width:680px;margin:0 auto 8px;font-weight:400}
   .hero__sub b{color:var(--text);font-weight:600}
+  /* Scarcity line: plain statement of fact, sits directly above the video.
+     Deliberately NOT a banner, countdown or urgency widget - the constraint
+     is real, so it reads stronger stated flat. */
+  .hero__scarcity{margin-top:18px;font-size:14px;font-weight:600;letter-spacing:.01em;
+    color:var(--accent);text-transform:uppercase}
+  .eyebrow__sep{opacity:.5;margin:0 4px}
 
   /* ── VIDEO ─────────────────────────────────────────────── */
   .video-wrap{max-width:860px;margin:34px auto 0;position:relative}
@@ -260,7 +266,12 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <nav class="nav">
     <div class="container nav__inner">
       <a class="nav__brand" href="#top">Mindframe<b>Media</b></a>
-      <a class="nav__cta" href="#book">Book a Call &rarr;</a>
+      <!-- NO nav CTA and NO sticky CTA, by design (Jeremy AI, 2026-08-02).
+           A shortcut to the form from the top lets cold traffic book without
+           watching the VSL, which recreates the instant-form failure we
+           deliberately rejected: the closer ends up on a call with someone who
+           was never sold. The only path to the application is past the video.
+           Do not re-add a header button. -->
     </div>
   </nav>
 
@@ -270,13 +281,19 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <header class="hero">
     <div class="hero__glow"></div>
     <div class="container">
-      <div class="eyebrow">Step 1 &nbsp;/&nbsp; Watch the Free Training</div>
-      <h1>Stop Chasing Jobs.<br />Start <em>Choosing</em> Them.</h1>
+      <!-- Above-the-fold copy locked 2026-08-02 (Jeremy AI r4/r5 + stop-slop).
+           Options + rationale: construction/landing-copy-options-2026-08-02.md
+           Rules: eyebrow trade list must stay WORD-FOR-WORD identical to the ad
+           captions (message match); headline stays POLE-NEUTRAL because two ad
+           hooks (dream-led + pain-led) feed this one page; no price, no named
+           client, no dollar figure anywhere. -->
+      <div class="eyebrow">Orange County Construction Companies <span class="eyebrow__sep">&middot;</span> Remodels, Additions, ADUs, Custom Builds</div>
+      <h1>The demand system built for <em>three</em> Orange County construction companies</h1>
       <p class="hero__sub">
-        The exact system we use to fill a construction company's calendar with
-        <b>qualified, ready-to-hire homeowners</b>, without cold calling, without door knocking,
-        and without relying on referrals that dry up.
+        We run the ads, vet every homeowner before they reach you, and warm them before
+        the inspection. You spend your time <b>bidding real projects with real budgets</b>.
       </p>
+      <p class="hero__scarcity">Only 3 companies in Orange County will be selected.</p>
 
       <!-- VIDEO
            LIVE: Vidalytics — "Jonathan VSL 2 (Construction)" (2:35, 1920x1080).
@@ -304,7 +321,7 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
       </script>
 
       <div class="hero__microtrust">
-        <span><b>Watch the full video</b> before booking. It answers most questions on the call.</span>
+        <span><b>Under 3 minutes.</b> See how the Qualified Project Funnel works and whether your company fits one of the three spots.</span>
       </div>
     </div>
   </header>
@@ -313,8 +330,8 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <section class="book" id="book">
     <div class="container">
       <div class="book__head">
-        <div class="eyebrow">Step 2 &nbsp;/&nbsp; Apply &amp; Book</div>
-        <h2>Grab your free growth call</h2>
+        <div class="eyebrow">Step 2 &nbsp;/&nbsp; Apply</div>
+        <h2>Apply for one of the three spots</h2>
         <p>Answer a few quick questions below (takes about 60 seconds), then pick a time. We will map out exactly how many jobs your calendar can hold, and how we would fill it.</p>
       </div>
       <div class="book__embed" id="bookEmbed">
@@ -330,7 +347,7 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <!-- ══ LOGO STRIP ══ -->
   <section class="logos">
     <div class="container">
-      <div class="logos__label">Trusted by growing construction &amp; trades companies</div>
+      <div class="logos__label">Trusted by growing construction companies</div>
       <div class="logos__row" id="logoRow">
         <!-- Real client logos are injected here from CONFIG.logos.
              Any remaining spots show as dashed placeholder slots. -->
@@ -343,28 +360,32 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     <div class="container">
       <div class="section-head">
         <div class="eyebrow">Why This Works</div>
-        <h2>The old way of getting jobs is broken</h2>
-        <p>Referrals are unpredictable. Lead marketplaces sell the same lead to five of your competitors. Here is the difference.</p>
+        <h2>What every other agency hands you, and what we do instead</h2>
+        <p>The difference is not how many leads arrive. It is what happens to them before they reach you.</p>
       </div>
       <div class="compare">
         <div class="compare__col compare__col--bad">
-          <h3><span class="tag tag--bad">The Old Way</span></h3>
+          <!-- MECHANISM-DRIVEN ROWS (Jeremy AI, 2026-08-02): every row names a
+               step in the process, not a feature or a feeling. Without named
+               case studies, the sequencing IS the differentiation. Keep them
+               paired left-to-right - each row answers the one beside it. -->
+          <h3><span class="tag tag--bad">Every Other Agency</span></h3>
           <ul>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Waiting on word of mouth and hoping the phone rings</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Buying shared leads that 5 competitors already called</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Feast or famine months with no steady pipeline</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Racing to the bottom on price against low-ballers</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>No idea where the next job is coming from</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Raw leads dumped in your inbox for your team to sort</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>The same lead sold to five of your competitors</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>No nurture, so you arrive at the door a stranger</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>Numbers scattered across platforms you never log into</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>The same funnel they sell to dentists and gyms</li>
           </ul>
         </div>
         <div class="compare__col compare__col--good">
           <h3><span class="tag tag--good">With Mindframe</span></h3>
           <ul>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Qualified homeowners booked straight to your calendar</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Exclusive leads that belong only to you</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>A predictable pipeline you can plan crews around</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Homeowners who value quality, not just the cheapest bid</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>A machine that runs whether you are on a jobsite or not</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Every homeowner fills out an application before they reach you</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Your leads are yours, and nobody else gets them</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Retargeting warms them before you walk the inspection</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>One dashboard for every lead, call and bidded project</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Built for Orange County construction, and nothing else</li>
           </ul>
         </div>
       </div>
@@ -375,9 +396,9 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <section class="final">
     <div class="hero__glow" style="opacity:.7"></div>
     <div class="container" style="position:relative;z-index:2">
-      <h2>Your calendar could be full<br />by this time next month.</h2>
-      <p>Watch the training, then book a free call. We will show you the exact plan to fill your pipeline, no pressure, no obligation.</p>
-      <a class="btn" href="#book">Book My Free Call &rarr;</a>
+      <h2>Three companies in Orange County.<br />One of them could be yours.</h2>
+      <p>The application takes about two minutes. If you fit, we will map out how many projects your calendar can hold and how we would fill it.</p>
+      <a class="btn" href="#book">Apply For One Of The Three &rarr;</a>
     </div>
   </section>
 
@@ -468,15 +489,18 @@ const CONFIG = {
     }
   }
 
-  // ---- Logos ---- (real logos first, then dashed placeholder slots up to 5)
+  // ---- Logos ---- real logos only.
+  // NO dashed "Client 3/4/5" placeholder slots: on a live page they advertise
+  // that we have three clients fewer than the row has room for, which reads as
+  // unfinished to a prospect judging credibility in two seconds. If there are
+  // no logos at all, the whole strip is removed rather than left empty.
   (function(){
     const row = document.getElementById('logoRow');
     const real = (CONFIG.logos||[]).map((l,i) =>
       '<img src="'+l.src+'" alt="'+(l.alt||('Client '+(i+1)))+'" />');
-    const slots = Math.max(0, 5 - real.length);
-    let html = real.join('');
-    for(let i=0;i<slots;i++) html += '<div class="logo-slot">Client '+(real.length+i+1)+'</div>';
-    row.innerHTML = html;
+    const section = row.closest('.logos');
+    if(!real.length){ if(section) section.remove(); return; }
+    row.innerHTML = real.join('');
   })();
 })();
 </script>
