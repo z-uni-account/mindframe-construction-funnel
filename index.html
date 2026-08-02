@@ -142,7 +142,9 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     box-shadow:0 22px 60px -24px rgba(0,0,0,.9)}
   .about__shot figcaption{margin-top:10px;font-size:12.5px;color:var(--text-subtle);
     text-align:center;letter-spacing:.01em}
-  .about__copy{max-width:640px;margin:0 auto;text-align:center}
+  /* Left-aligned on purpose: centred text reads like a slogan, a note reads
+     like a person talking. */
+  .about__copy{max-width:600px;margin:0 auto;text-align:left}
   .about__copy p{color:var(--text-muted);font-size:16px;line-height:1.72;margin-bottom:14px}
   .about__kicker{color:var(--text) !important;font-weight:600}
   @media (max-width:760px){
@@ -456,8 +458,8 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <section class="about" id="about">
     <div class="container">
       <div class="section-head">
-        <div class="eyebrow">Who Runs Your Demand</div>
-        <h2>The guy behind the camera is the guy running your ads</h2>
+        <div class="eyebrow">From Jonathan</div>
+        <h2>A note before you apply</h2>
       </div>
 
       <div class="about__shots">
@@ -484,9 +486,15 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         <!-- "Five years" is Z's confirmed number (2026-08-02). Do NOT soften it
              back to "years of experience" - a specific number reads verifiable,
              the hedge reads like a resume template (Jeremy AI). -->
-        <p>I have spent five years behind a camera and running paid ads for service businesses. The Qualified Project Funnel is the system I built after running the same engine across multiple industries.</p>
-        <p>I shoot the ads and I run the budget, so the person who films you is the one deciding where your money goes.</p>
-        <p class="about__kicker">Hire us and you get the guy in these photos standing on your job site.</p>
+        <!-- PERSONAL NOTE, not sales copy (Z, 2026-08-02). Two earlier drafts were
+             rejected for the same reason: they explained a benefit or closed a sale.
+             This block is Jonathan talking. Keep it first person, factual, and let
+             it end without a pitch - the final CTA is directly below and does that
+             job. Do not add "hire us", do not explain what the reader gets. -->
+        <p>I'm Jonathan, and I run Mindframe.</p>
+        <p>I have spent five years behind a camera and running paid ads for service businesses. I built the same system in a few different industries, and now construction.</p>
+        <p>That's me in the photos, on a client's job in Orange County. I'm the one who shows up with the camera.</p>
+        <p class="about__kicker">I take three companies at a time so I can actually be there for all three.</p>
       </div>
     </div>
   </section>
