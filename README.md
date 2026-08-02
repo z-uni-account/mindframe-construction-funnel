@@ -33,6 +33,60 @@ The GitHub repo is the deploy target only. **Edit the source here in the ops rep
 
 ---
 
+## Above-the-fold copy — ONE JOB PER ELEMENT
+
+Locked with Jeremy AI (2026-08-03, conv `745ce63d`, logged in `reference/ad-strategies/jeremy-ai-advisor-notes.md`). Full option set and rationale: `construction/landing-copy-options-2026-08-02.md`.
+
+| Element | Its one job | Live copy |
+| --- | --- | --- |
+| Pill | Trade filter | Remodels, ADUs, Custom Builds, Panel Upgrades, EV Chargers |
+| **H1** | **Callout. The "that's me" moment.** | For Orange County construction companies done buying *shared leads* and waiting on referrals |
+| Sub-headline | Mechanism | We run the ads, vet every homeowner before they reach you… |
+| Red line | Who gets in | Only 3 companies in Orange County will be selected. |
+| VSL | Everything else | — |
+
+**If two elements say the same thing, one is dead weight.** That is exactly what happened on 2026-08-02: the H1 and the red line were both selling the 3-company limit, so the H1 got rewritten on 08-03 to name the enemy instead.
+
+**Never put "vetted", "qualified", "exclusive", or "ready to bid" into the H1.** They repeat the sub-headline, and they are the words every competitor in this space uses, so contractors read straight past them. The H1 sells nothing on purpose. Selling is the video's job.
+
+**Parked split test** (run once the page has traffic): *"Homeowners who already know your face before you walk through their door."* The one line no competitor can copy, because they don't put the owner on camera.
+
+**Nav CTA:** `Book A Call → #book` is back as of 2026-08-03, at Z's call. Jeremy's objection stands and is worth watching: a top-of-page shortcut lets cold traffic apply without watching the VSL, so the closer lands on a call with someone who was never sold. **The tell is the show rate** — if bookings climb while shows drop, this button is the cause. Still no sticky or floating CTA.
+
+---
+
+## Favicon + link share card — ADDED 2026-08-03
+
+| Asset | File | Notes |
+| --- | --- | --- |
+| Favicon (primary) | `assets/favicon.svg` | Red `#dc2626` rounded square, white **M**. Red, not dark, because the tab strip is usually dark and a dark mark vanishes at 16px. One letter, not "MF" — two letters turn to mud at that size. |
+| Favicon (fallback) | `assets/favicon-32.png`, `/favicon.ico` | The root `favicon.ico` is there for crawlers that ignore `<link>` and hit the root path. |
+| iOS home screen | `assets/apple-touch-icon.png` | 180×180. |
+| Share image | `assets/og-cover.png` | 1200×630. Matches the tattoo funnel's `summary_large_image` setup. |
+| Share image SOURCE | `assets/og-cover.src.html` | **Workspace only, deliberately not deployed.** |
+
+Both pages carry the favicon. Only `index.html` carries the share card — `confirmation.html` is `noindex` and only reachable after a booking, so there is nothing to preview.
+
+**Rule: `og:title` must stay a substring of the page H1, and the card's trade list must stay word-for-word identical to the ad captions.** A share card that promises something the page does not say breaks message match at the worst possible moment, when a contractor forwards the link to his partner.
+
+### Re-rendering the card after a headline change
+
+Edit `assets/og-cover.src.html` to match the new H1, then drive headless Chrome over CDP (the same reason as the mobile check below: `--headless --screenshot` will not give you a true viewport):
+
+```js
+// Node 24 has a global WebSocket. Launch Chrome with --headless=new --remote-debugging-port=9344,
+// grab the page target from http://127.0.0.1:9344/json/list, then:
+Emulation.setDeviceMetricsOverride {width:1200, height:630, deviceScaleFactor:1}
+Page.navigate {url:'file://…/assets/og-cover.src.html'}
+// await document.fonts.ready, THEN wait ~600ms more — Inter renders as a
+// fallback face for a beat after fonts.ready resolves and the card ships blurry.
+Page.captureScreenshot {clip:{x:0,y:0,width:1200,height:630,scale:1}}
+```
+
+Then redeploy and **re-scrape the card** in Facebook's Sharing Debugger, or Meta keeps serving the old image from cache.
+
+---
+
 ## To go live / edit: the CONFIG block
 
 Everything swappable lives in one JS `CONFIG` object at the bottom of `index.html`. Edit only that:
@@ -168,6 +222,7 @@ SRC="construction-landing/vsl-funnel"
 D="$(mktemp -d)/deploy"
 git clone -q https://github.com/z-uni-account/mindframe-construction-funnel.git "$D"
 cp -R "$SRC/." "$D/"          # sync source -> deploy clone (README/.git preserved by clone)
+rm -f "$D/assets/og-cover.src.html"   # share-card source, workspace only
 touch "$D/.nojekyll"           # required so /assets and dotfiles serve
 cd "$D" && git add -A \
   && git -c user.email="ops@mindframe.local" -c user.name="MindframeOps" commit -m "update funnel" \
