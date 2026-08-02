@@ -112,6 +112,9 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     box-shadow:0 30px 80px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.03),
       0 0 60px -10px var(--accent-glow);background:var(--surface)}
   .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  /* Vidalytics sets its own 56.25% padding-top on its embed div, so the frame
+     must not also force an aspect-ratio or the two fight and the player clips. */
+  .video-frame--live{aspect-ratio:auto}
   .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
     justify-content:center;gap:16px;cursor:default;
     background:
@@ -275,18 +278,30 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         and without relying on referrals that dry up.
       </p>
 
-      <!-- VIDEO -->
+      <!-- VIDEO
+           LIVE: Vidalytics — "Jonathan VSL 2 (Construction)" (2:35, 1920x1080).
+           Vid id BqowP6uVrPPVM_fd · account JwcAQOTG · added 2026-08-02.
+           TO SWAP THE VSL: replace BOTH the div id below AND the two ids in the
+           script's last line with the new Vid's embed code from Vidalytics.
+           Do NOT use CONFIG.vslEmbedUrl for this — that path builds an <iframe>
+           and Vidalytics needs its own loader script. Leave vslEmbedUrl empty.
+           Why VSL 2 and not a Vidalytics split test: plans/2026-08-02-construction-vsl-launch.md -->
       <div class="video-wrap">
-        <div class="video-frame" id="videoFrame">
-          <div class="video-ph" id="videoPh">
-            <div class="video-ph__play">
-              <svg width="26" height="30" viewBox="0 0 26 30" fill="none"><path d="M25 13.27a2 2 0 0 1 0 3.46L3 29.46A2 2 0 0 1 0 27.73V2.27A2 2 0 0 1 3 .54l22 12.73Z" fill="#fff"/></svg>
-            </div>
-            <div class="video-ph__label">Your Training Video</div>
-            <div class="video-ph__note">Paste your video link into <b>CONFIG.vslEmbedUrl</b> and it appears here automatically.</div>
-          </div>
+        <div class="video-frame video-frame--live" id="videoFrame">
+          <div id="vidalytics_embed_BqowP6uVrPPVM_fd" style="width: 100%; position:relative; padding-top: 56.25%;"></div>
         </div>
       </div>
+      <script type="text/javascript">
+      (function (v, i, d, a, l, y, t, c, s) {
+          y='_'+d.toLowerCase();c=d+'L';if(!v[d]){v[d]={};}if(!v[c]){v[c]={};}if(!v[y]){v[y]={};}var vl='Loader',vli=v[y][vl],vsl=v[c][vl + 'Script'],vlf=v[c][vl + 'Loaded'],ve='Embed';
+          if (!vsl){vsl=function(u,cb){
+              if(t){cb();return;}s=i.createElement("script");s.type="text/javascript";s.async=1;s.src=u;
+              if(s.readyState){s.onreadystatechange=function(){if(s.readyState==="loaded"||s.readyState=="complete"){s.onreadystatechange=null;vlf=1;cb();}};}else{s.onload=function(){vlf=1;cb();};}
+              i.getElementsByTagName("head")[0].appendChild(s);
+          };}
+          vsl(l+'loader.min.js',function(){if(!vli){var vlc=v[c][vl];vli=new vlc();}vli.loadScript(l+'player.min.js',function(){var vec=v[d][ve];t=new vec();t.run(a);});});
+      })(window, document, 'Vidalytics', 'vidalytics_embed_BqowP6uVrPPVM_fd', 'https://fast.vidalytics.com/embeds/JwcAQOTG/BqowP6uVrPPVM_fd/');
+      </script>
 
       <div class="hero__microtrust">
         <span><b>Watch the full video</b> before booking. It answers most questions on the call.</span>
@@ -387,10 +402,11 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
 ═══════════════════════════════════════════════════════════════════════ */
 const CONFIG = {
 
-  // 1) VSL VIDEO.  Paste a YouTube, Vimeo, or Wistia link. Leave "" to keep the placeholder.
-  //    Examples:
-  //      "https://www.youtube.com/watch?v=XXXXXXXXXXX"
-  //      "https://vimeo.com/123456789"
+  // 1) VSL VIDEO.  ⚠️ NOT IN USE — the live VSL is a Vidalytics embed hard-wired
+  //    into the markup above (search "VIDALYTICS" / "vidalytics_embed"). Vidalytics
+  //    needs its own loader <script>, which this iframe path cannot run.
+  //    LEAVE THIS EMPTY. Setting it would overwrite the Vidalytics player.
+  //    (Still works for a YouTube/Vimeo/Wistia URL if we ever move off Vidalytics.)
   vslEmbedUrl: "",
 
   // 2) BOOKING.  Paste your Calendly OR Tally link. It auto-detects and embeds inline.
