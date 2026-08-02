@@ -51,7 +51,7 @@ Locked with Jeremy AI (2026-08-03, conv `745ce63d`, logged in `reference/ad-stra
 
 **Parked split test** (run once the page has traffic): *"Homeowners who already know your face before you walk through their door."* The one line no competitor can copy, because they don't put the owner on camera.
 
-**Nav CTA:** `Book A Call → #book` is back as of 2026-08-03, at Z's call. Jeremy's objection stands and is worth watching: a top-of-page shortcut lets cold traffic apply without watching the VSL, so the closer lands on a call with someone who was never sold. **The tell is the show rate** — if bookings climb while shows drop, this button is the cause. Still no sticky or floating CTA.
+**No nav CTA and no sticky CTA. Settled twice.** Jeremy AI ruled against it on 2026-08-02, it went back in on 08-03 at Z's request, and Z pulled it again the same day once the reasoning was laid out: a top-of-page shortcut lets cold traffic apply without watching the VSL, so the closer lands on a call with someone who was never sold. Bookings go up, shows go down, and **shows are the number that pays.** The only path to the application is past the video. Do not re-add it.
 
 ---
 

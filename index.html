@@ -384,7 +384,6 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         We run the ads, vet every homeowner before they reach you, and warm them before
         the inspection. You spend your time <b>bidding real projects with real budgets</b>.
       </p>
-      <p class="hero__scarcity">Only 3 companies in Orange County will be selected.</p>
 
       <!-- VIDEO
            LIVE: Vidalytics — "Jonathan VSL 2 (Construction)" (2:35, 1920x1080).
@@ -412,8 +411,18 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
       </script>
 
       <div class="hero__microtrust">
-        <span><b>Under 3 minutes.</b> See how the Qualified Project Funnel works and whether your company fits one of the three spots.</span>
+        <span><b>Under 3 minutes.</b> See how the Qualified Project Funnel works and whether your company is a fit.</span>
       </div>
+
+      <!-- Scarcity line sits BELOW the video, moved there 2026-08-03 (Z).
+           Above the video it pushed the player down far enough that a phone
+           only showed the top third of it, and the video is the whole point of
+           the page. Down here it is also the last thing read before the
+           application, which is where the constraint does the most work.
+           The microtrust line above used to end "...fits one of the three
+           spots" - that was cut so these two neighbours don't say the same
+           thing twice. -->
+      <p class="hero__scarcity">Only 3 companies in Orange County will be selected.</p>
     </div>
   </header>
 
