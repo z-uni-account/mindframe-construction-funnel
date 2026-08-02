@@ -127,6 +127,26 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     .hero .eyebrow .eyebrow__sep{display:none}
   }
 
+  /* ── THE OPERATOR (about) ──────────────────────────────── */
+  .about{padding:74px 0 64px;border-top:1px solid var(--border)}
+  .about__shots{display:grid;grid-template-columns:0.78fr 1fr;gap:18px;
+    max-width:940px;margin:0 auto 34px}
+  .about__shot{margin:0}
+  .about__shot img{width:100%;height:380px;object-fit:cover;object-position:center 28%;
+    display:block;border-radius:var(--radius-lg);border:1px solid var(--border);
+    box-shadow:0 22px 60px -24px rgba(0,0,0,.9)}
+  .about__shot figcaption{margin-top:10px;font-size:12.5px;color:var(--text-subtle);
+    text-align:center;letter-spacing:.01em}
+  .about__copy{max-width:640px;margin:0 auto;text-align:center}
+  .about__copy p{color:var(--text-muted);font-size:16px;line-height:1.72;margin-bottom:14px}
+  .about__kicker{color:var(--text) !important;font-weight:600}
+  @media (max-width:760px){
+    .about{padding:56px 0 48px}
+    .about__shots{grid-template-columns:1fr;gap:22px;margin-bottom:28px}
+    .about__shot img{height:300px}
+    .about__copy p{font-size:15px}
+  }
+
   /* ── VIDEO ─────────────────────────────────────────────── */
   .video-wrap{max-width:860px;margin:34px auto 0;position:relative}
   .video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-lg);
@@ -412,6 +432,46 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Built for Orange County construction, and nothing else</li>
           </ul>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ THE OPERATOR (founder / about) ══
+       Placed BELOW the comparison and ABOVE the final CTA on purpose (Jeremy AI,
+       2026-08-02): the qualified prospect converts at the form right under the
+       video and never scrolls this far. This section exists for the hesitater
+       who scrolled past the form looking for a reason to trust us. It is the
+       last thing he reads before the CTA.
+       Its ONE job: answer "can this guy actually do what he just described in
+       the video?" Not a biography. The photos carry ~90% of that; the copy only
+       frames them and closes the loop back to the VSL's own words.
+       NO CAROUSEL by design - it needs interaction and scrollers will not swipe.
+       Two stacked stills, each saying something different: "I do this" and
+       "here is the result." Photos are from a real client shoot, 2026-05-30. -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Who Runs Your Demand</div>
+        <h2>The guy behind the camera is the guy running your ads</h2>
+      </div>
+
+      <div class="about__shots">
+        <figure class="about__shot">
+          <img src="assets/about/operator-on-site.jpg" width="933" height="1400" loading="lazy" decoding="async"
+               alt="Jonathan on a residential job site with his camera rig" />
+          <figcaption>On site, not in an office.</figcaption>
+        </figure>
+        <figure class="about__shot">
+          <img src="assets/about/filming-client.jpg" width="1400" height="933" loading="lazy" decoding="async"
+               alt="Filming a client on location for their ads" />
+          <figcaption>Filming a client's ads on location.</figcaption>
+        </figure>
+      </div>
+
+      <div class="about__copy">
+        <p>I have spent my career behind a camera and running paid ads for service businesses. The Qualified Project Funnel is the system I built after running the same engine across multiple industries.</p>
+        <p>These photos are from a real client shoot on a real job site. Nothing here is stock.</p>
+        <p class="about__kicker">This is what it looks like when we take over the demand side of your business.</p>
       </div>
     </div>
   </section>
