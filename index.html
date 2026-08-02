@@ -109,7 +109,23 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
      is real, so it reads stronger stated flat. */
   .hero__scarcity{margin-top:18px;font-size:14px;font-weight:600;letter-spacing:.01em;
     color:var(--accent);text-transform:uppercase}
-  .eyebrow__sep{opacity:.5;margin:0 4px}
+  .eyebrow__text{display:inline;line-height:1.6}
+  .eyebrow__sep{opacity:.45}
+  .eyebrow__brk{display:none}
+  /* The wide .14em tracking is what blows this label past one line on a phone.
+     Tighten tracking + size on small screens so it sits on two clean lines. */
+  @media (max-width:600px){
+    /* inline-block (not flex) so the ::before dot flows INLINE with the first
+       word instead of becoming its own flex item and stacking above the text */
+    .hero .eyebrow{display:inline-block;font-size:10.5px;letter-spacing:.07em;
+      padding:8px 16px;max-width:340px;margin-left:auto;margin-right:auto}
+    .hero .eyebrow::before{display:inline-block;vertical-align:middle;
+      margin-right:7px;position:relative;top:-1px}
+    /* Break at a chosen point rather than wherever the width happens to run
+       out, and drop the mid-dot since the line break now does the separating. */
+    .hero .eyebrow .eyebrow__brk{display:block}
+    .hero .eyebrow .eyebrow__sep{display:none}
+  }
 
   /* ── VIDEO ─────────────────────────────────────────────── */
   .video-wrap{max-width:860px;margin:34px auto 0;position:relative}
@@ -287,7 +303,11 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
            captions (message match); headline stays POLE-NEUTRAL because two ad
            hooks (dream-led + pain-led) feed this one page; no price, no named
            client, no dollar figure anywhere. -->
-      <div class="eyebrow">Orange County Construction Companies <span class="eyebrow__sep">&middot;</span> Remodels, Additions, ADUs, Custom Builds</div>
+      <!-- The label MUST stay inside one child element. .eyebrow is a flex
+           container, so bare text nodes and a sibling separator span become
+           separate flex items and wrap independently, which stranded the "·"
+           alone on its own line on a real phone. One child = normal text wrap. -->
+      <div class="eyebrow"><span class="eyebrow__text">Orange County Construction Companies<span class="eyebrow__sep"> &middot; </span><br class="eyebrow__brk" />Remodels, Additions, ADUs, Custom Builds</span></div>
       <h1>The demand system built for <em>three</em> Orange County construction companies</h1>
       <p class="hero__sub">
         We run the ads, vet every homeowner before they reach you, and warm them before
