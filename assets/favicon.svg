@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Mindframe Media mark. Red square + white M, because the tab strip is
+       usually dark and a dark mark disappears at 16px. One letter, not "MF" -
+       two letters turn to mud at favicon size. -->
+  <rect width="64" height="64" rx="14" fill="#dc2626"/>
+  <path d="M14 46V18h7.4l10.6 15.9L42.6 18H50v28h-7V30.6l-9.1 13.2h-1.8L23 30.6V46z" fill="#fff"/>
+</svg>

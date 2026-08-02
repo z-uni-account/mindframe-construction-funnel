@@ -4,10 +4,33 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orange County Construction Companies | Mindframe Media</title>
-<meta name="description" content="The demand system built for three Orange County construction companies. Remodels, additions, ADUs, custom builds. Homeowners vetted before they reach you." />
-<meta property="og:title" content="The Demand System Built For Three Orange County Construction Companies" />
-<meta property="og:description" content="We run the ads, vet every homeowner before they reach you, and warm them before the inspection. Only 3 companies in Orange County will be selected." />
+<meta name="description" content="We run the ads, vet every homeowner before they reach you, and warm them before the inspection. Remodels, ADUs, custom builds, panel upgrades, EV chargers." />
+<link rel="canonical" href="https://mindframeconstruction.com/" />
+
+<!-- LINK SHARE CARD.
+     Rules: og:title must stay a substring of the page H1, and the trade list
+     must stay word-for-word identical to the ad captions. A share card that
+     promises something the page does not say breaks message match at the worst
+     moment, when a contractor forwards the link to his partner.
+     The image is assets/og-cover.png, rendered from assets/og-cover.src.html.
+     Re-render it whenever the H1 changes - recipe in README.md. -->
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="Mindframe Media" />
+<meta property="og:url" content="https://mindframeconstruction.com/" />
+<meta property="og:title" content="For Orange County construction companies done buying shared leads" />
+<meta property="og:description" content="We run the ads, vet every homeowner before they reach you, and warm them before the inspection. Only 3 companies in Orange County will be selected." />
+<meta property="og:image" content="https://mindframeconstruction.com/assets/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Mindframe Media. For Orange County construction companies done buying shared leads and waiting on referrals." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="For Orange County construction companies done buying shared leads" />
+<meta name="twitter:description" content="We run the ads, vet every homeowner before they reach you, and warm them before the inspection. Only 3 companies in Orange County will be selected." />
+<meta name="twitter:image" content="https://mindframeconstruction.com/assets/og-cover.png" />
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 <meta name="theme-color" content="#080808" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -313,12 +336,14 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <nav class="nav">
     <div class="container nav__inner">
       <a class="nav__brand" href="#top">Mindframe<b>Media</b></a>
-      <!-- NO nav CTA and NO sticky CTA, by design (Jeremy AI, 2026-08-02).
-           A shortcut to the form from the top lets cold traffic book without
-           watching the VSL, which recreates the instant-form failure we
-           deliberately rejected: the closer ends up on a call with someone who
-           was never sold. The only path to the application is past the video.
-           Do not re-add a header button. -->
+      <!-- Nav CTA RESTORED 2026-08-03 at Z's call.
+           Jeremy AI (2026-08-02) argued against it: a shortcut to the form from
+           the top lets cold traffic apply without watching the VSL, so the
+           closer ends up on a call with someone who was never sold. That risk
+           is real and is what to watch in the show-rate number.
+           Still NO sticky/floating CTA - one header button, not a bar that
+           follows the visitor down the page. -->
+      <a class="nav__cta" href="#book">Book A Call</a>
     </div>
   </nav>
 
@@ -328,12 +353,23 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   <header class="hero">
     <div class="hero__glow"></div>
     <div class="container">
-      <!-- Above-the-fold copy locked 2026-08-02 (Jeremy AI r4/r5 + stop-slop).
-           Options + rationale: construction/landing-copy-options-2026-08-02.md
+      <!-- Above-the-fold copy. Options + rationale:
+           construction/landing-copy-options-2026-08-02.md
            Rules: eyebrow trade list must stay WORD-FOR-WORD identical to the ad
-           captions (message match); headline stays POLE-NEUTRAL because two ad
-           hooks (dream-led + pain-led) feed this one page; no price, no named
-           client, no dollar figure anywhere.
+           captions (message match); no price, no named client, no dollar figure
+           anywhere.
+           ONE JOB PER ELEMENT (Jeremy AI 2026-08-03, conv 745ce63d):
+             pill = trade filter · H1 = callout · sub = mechanism ·
+             red line = who gets in · VSL = everything else.
+           The H1 was rewritten 2026-08-03 because it and the red scarcity line
+           were both selling the 3-company limit. The H1 now names the enemy
+           (shared leads + referral dependency) and sells NOTHING - selling is
+           the video's job. Do not put mechanism words ("vetted", "qualified",
+           "exclusive", "ready to bid") back into it; they collide with the
+           sub-headline below and they are the exact words every competitor
+           uses, so contractors read straight past them.
+           Parked split test: "Homeowners who already know your face before you
+           walk through their door" - the one line only a video agency can make.
            2026-08-02: "Orange County" REMOVED from this pill (Z) - it appeared
            three times above the fold (pill, headline, scarcity line). The geo
            still lands twice below; the pill's job is the TRADE filter, so it
@@ -343,7 +379,7 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
            separate flex items and wrap independently, which stranded the "·"
            alone on its own line on a real phone. One child = normal text wrap. -->
       <div class="eyebrow"><span class="eyebrow__text">Remodels, ADUs, Custom Builds<span class="eyebrow__sep">, </span><br class="eyebrow__brk" />Panel Upgrades, EV Chargers</span></div>
-      <h1>The demand system built for <em>three</em> Orange County construction companies</h1>
+      <h1>For Orange County construction companies done buying <em>shared leads</em> and waiting on referrals</h1>
       <p class="hero__sub">
         We run the ads, vet every homeowner before they reach you, and warm them before
         the inspection. You spend your time <b>bidding real projects with real budgets</b>.
