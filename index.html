@@ -129,19 +129,23 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
 
   /* ── THE OPERATOR (about) ──────────────────────────────── */
   .about{padding:74px 0 64px;border-top:1px solid var(--border)}
-  .about__shots{display:grid;grid-template-columns:0.78fr 1fr;gap:18px;
-    max-width:940px;margin:0 auto 34px}
-  .about__shot{margin:0}
-  .about__shot img{width:100%;height:380px;object-fit:cover;object-position:center 28%;}
+  .about__carousel{max-width:820px;margin:0 auto 34px;position:relative;overflow:hidden}
+  .about__track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);will-change:transform}
+  .about__slide{margin:0;flex:0 0 100%;min-width:100%}
+  .about__slide img{width:100%;height:440px;object-fit:cover;object-position:center 30%;
+    display:block;border-radius:var(--radius-lg);border:1px solid var(--border);
+    box-shadow:0 22px 60px -24px rgba(0,0,0,.9)}
   /* Bias the client frame right so the crop keeps his face and the trade text
      ("...arger Installation / ...ical Panel Upgrades") rather than the van's
      phone number on the far left. */
-  .about__shot:nth-child(2) img{object-position:62% 40%;
-
-    display:block;border-radius:var(--radius-lg);border:1px solid var(--border);
-    box-shadow:0 22px 60px -24px rgba(0,0,0,.9)}
-  .about__shot figcaption{margin-top:10px;font-size:12.5px;color:var(--text-subtle);
-    text-align:center;letter-spacing:.01em}
+  .about__slide:nth-child(4) img{object-position:62% 40%}
+  .about__slide figcaption{margin-top:12px;font-size:12.5px;color:var(--text-subtle);
+    text-align:center;letter-spacing:.01em;min-height:18px}
+  .about__dots{display:flex;justify-content:center;gap:9px;margin-top:16px}
+  .about__dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;
+    background:#3a3a3a;cursor:pointer;transition:background .3s,width .3s}
+  .about__dots button[aria-selected="true"]{background:var(--accent);width:20px;border-radius:100px}
+  @media (prefers-reduced-motion:reduce){.about__track{transition:none}}
   /* Left-aligned on purpose: centred text reads like a slogan, a note reads
      like a person talking. */
   .about__copy{max-width:600px;margin:0 auto;text-align:left}
@@ -149,8 +153,8 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   .about__kicker{color:var(--text) !important;font-weight:600}
   @media (max-width:760px){
     .about{padding:56px 0 48px}
-    .about__shots{grid-template-columns:1fr;gap:22px;margin-bottom:28px}
-    .about__shot img{height:300px}
+    .about__carousel{margin-bottom:28px}
+    .about__slide img{height:300px}
     .about__copy p{font-size:15px}
   }
 
@@ -462,24 +466,38 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         <h2>A note before you apply</h2>
       </div>
 
-      <div class="about__shots">
-        <figure class="about__shot">
-          <img src="assets/about/operator-on-site.jpg" width="933" height="1400" loading="lazy" decoding="async"
-               alt="Jonathan on a residential job site with his camera rig" />
-          <figcaption>On site, not in an office.</figcaption>
-        </figure>
-        <!-- ONE client face on the page, and only one (Z, 2026-08-02). Jeremy AI's
-             rule: a branded van is not a name, but a recognisable face is, so a
-             second client-facing photo would start naming clients by proxy.
-             If another photo is ever added here, it must not show a client's face. -->
-        <figure class="about__shot">
-          <img src="assets/about/client-on-camera.jpg" width="1400" height="933" loading="lazy" decoding="async"
-               alt="A client on his own job site, mid-take during an ad shoot" />
-          <!-- Caption says "mid-take", NOT "filming": there is no camera in this
-               frame, only the script in shot at the right edge. Image 1 carries
-               the camera. Keep captions to what the photo actually shows. -->
-          <figcaption>A client mid-take on his own job site.</figcaption>
-        </figure>
+      <!-- AUTO-SLIDING carousel (Z, 2026-08-02). Jeremy AI's objection to a
+           carousel was that it is interaction-dependent and scrollers will not
+           swipe - auto-advance answers that, since every slide is seen without
+           a tap. Keep it AUTO. If it is ever made manual-only, most visitors
+           will only ever see slide 1 and the other three are wasted.
+           Order tells the job start to finish: who he is, prep, shoot, result. -->
+      <div class="about__carousel" id="aboutCarousel">
+        <div class="about__track" id="aboutTrack">
+          <figure class="about__slide">
+            <img src="assets/about/operator-on-site.jpg" width="933" height="1400" decoding="async"
+                 alt="Jonathan on a residential job site with his camera rig" />
+            <figcaption>On site, not in an office.</figcaption>
+          </figure>
+          <figure class="about__slide">
+            <img src="assets/about/reviewing-script.jpg" width="1400" height="933" loading="lazy" decoding="async"
+                 alt="Going through the script with a client before filming" />
+            <figcaption>Going through the script before we roll.</figcaption>
+          </figure>
+          <figure class="about__slide">
+            <img src="assets/about/directing-the-shoot.jpg" width="1400" height="933" loading="lazy" decoding="async"
+                 alt="Jonathan directing a shoot from behind the camera on a job site" />
+            <figcaption>Behind the camera, running the shoot.</figcaption>
+          </figure>
+          <figure class="about__slide">
+            <img src="assets/about/client-on-camera.jpg" width="1400" height="933" loading="lazy" decoding="async"
+                 alt="A client on his own job site, mid-take during an ad shoot" />
+            <!-- Caption says "mid-take", NOT "filming": there is no camera in
+                 this frame, only the script at the right edge. -->
+            <figcaption>A client mid-take on his own job site.</figcaption>
+          </figure>
+        </div>
+        <div class="about__dots" id="aboutDots" role="tablist" aria-label="Photos from a client shoot"></div>
       </div>
 
       <div class="about__copy">
@@ -598,6 +616,64 @@ const CONFIG = {
       host.innerHTML = '<iframe src="'+b+'" title="Book a call" loading="lazy" style="min-height:700px"></iframe>';
     }
   }
+
+  // ---- About carousel ---- auto-advancing, no interaction required.
+  // Auto-advance is the whole point: this page is built for scrollers, and a
+  // swipe-only carousel means most visitors only ever see slide 1.
+  // Pauses on hover/focus, when the tab is hidden, and while a finger is down,
+  // so it never yanks a slide out from under someone who is actually looking.
+  (function(){
+    const track = document.getElementById('aboutTrack');
+    const dotsHost = document.getElementById('aboutDots');
+    const frame = document.getElementById('aboutCarousel');
+    if(!track || !dotsHost || !frame) return;
+    const slides = [...track.children];
+    if(slides.length < 2){ dotsHost.remove(); return; }
+
+    const DELAY = 4500;
+    let i = 0, timer = null, paused = false;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const dots = slides.map((_, n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-label','Photo ' + (n+1) + ' of ' + slides.length);
+      b.addEventListener('click', () => { go(n); restart(); });
+      dotsHost.appendChild(b);
+      return b;
+    });
+
+    function go(n){
+      i = (n + slides.length) % slides.length;
+      track.style.transform = 'translateX(' + (-i * 100) + '%)';
+      dots.forEach((d, k) => d.setAttribute('aria-selected', k === i ? 'true' : 'false'));
+      slides.forEach((s, k) => s.setAttribute('aria-hidden', k === i ? 'false' : 'true'));
+    }
+    function tick(){ if(!paused) go(i + 1); }
+    function start(){ if(!reduce && !timer) timer = setInterval(tick, DELAY); }
+    function stop(){ clearInterval(timer); timer = null; }
+    function restart(){ stop(); start(); }
+
+    ['mouseenter','focusin','touchstart'].forEach(ev =>
+      frame.addEventListener(ev, () => { paused = true; }, {passive:true}));
+    ['mouseleave','focusout','touchend','touchcancel'].forEach(ev =>
+      frame.addEventListener(ev, () => { paused = false; }, {passive:true}));
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+
+    // swipe, for anyone who does want to drive it
+    let x0 = null;
+    frame.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+    frame.addEventListener('touchend', e => {
+      if(x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if(Math.abs(dx) > 40){ go(i + (dx < 0 ? 1 : -1)); restart(); }
+      x0 = null;
+    }, {passive:true});
+
+    go(0);
+    start();
+  })();
 
   // ---- Logos ---- real logos only.
   // NO dashed "Client 3/4/5" placeholder slots: on a live page they advertise
