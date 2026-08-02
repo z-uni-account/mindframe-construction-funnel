@@ -132,7 +132,12 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   .about__shots{display:grid;grid-template-columns:0.78fr 1fr;gap:18px;
     max-width:940px;margin:0 auto 34px}
   .about__shot{margin:0}
-  .about__shot img{width:100%;height:380px;object-fit:cover;object-position:center 28%;
+  .about__shot img{width:100%;height:380px;object-fit:cover;object-position:center 28%;}
+  /* Bias the client frame right so the crop keeps his face and the trade text
+     ("...arger Installation / ...ical Panel Upgrades") rather than the van's
+     phone number on the far left. */
+  .about__shot:nth-child(2) img{object-position:62% 40%;
+
     display:block;border-radius:var(--radius-lg);border:1px solid var(--border);
     box-shadow:0 22px 60px -24px rgba(0,0,0,.9)}
   .about__shot figcaption{margin-top:10px;font-size:12.5px;color:var(--text-subtle);
@@ -461,15 +466,25 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
                alt="Jonathan on a residential job site with his camera rig" />
           <figcaption>On site, not in an office.</figcaption>
         </figure>
+        <!-- ONE client face on the page, and only one (Z, 2026-08-02). Jeremy AI's
+             rule: a branded van is not a name, but a recognisable face is, so a
+             second client-facing photo would start naming clients by proxy.
+             If another photo is ever added here, it must not show a client's face. -->
         <figure class="about__shot">
-          <img src="assets/about/filming-client.jpg" width="1400" height="933" loading="lazy" decoding="async"
-               alt="Filming a client on location for their ads" />
-          <figcaption>Filming a client's ads on location.</figcaption>
+          <img src="assets/about/client-on-camera.jpg" width="1400" height="933" loading="lazy" decoding="async"
+               alt="A client on his own job site, mid-take during an ad shoot" />
+          <!-- Caption says "mid-take", NOT "filming": there is no camera in this
+               frame, only the script in shot at the right edge. Image 1 carries
+               the camera. Keep captions to what the photo actually shows. -->
+          <figcaption>A client mid-take on his own job site.</figcaption>
         </figure>
       </div>
 
       <div class="about__copy">
-        <p>I have spent my career behind a camera and running paid ads for service businesses. The Qualified Project Funnel is the system I built after running the same engine across multiple industries.</p>
+        <!-- "Five years" is Z's confirmed number (2026-08-02). Do NOT soften it
+             back to "years of experience" - a specific number reads verifiable,
+             the hedge reads like a resume template (Jeremy AI). -->
+        <p>I have spent five years behind a camera and running paid ads for service businesses. The Qualified Project Funnel is the system I built after running the same engine across multiple industries.</p>
         <p>These photos are from a real client shoot on a real job site. Nothing here is stock.</p>
         <p class="about__kicker">This is what it looks like when we take over the demand side of your business.</p>
       </div>
