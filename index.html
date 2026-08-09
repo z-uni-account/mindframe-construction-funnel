@@ -802,6 +802,37 @@ const CONFIG = {
       s.onload=function(){ if(window.Tally) Tally.loadEmbeds(); };
       s.onerror=function(){ if(window.Tally) Tally.loadEmbeds(); };
       document.body.appendChild(s);
+
+      // ---- Meta pixel: Lead on application submit ----
+      // The application lives in a cross-origin iframe, so we cannot see the
+      // submit directly. Tally's embed.js posts a message to the parent window
+      // on completion, which is the only submit signal we get.
+      //
+      // WHY THIS EVENT MATTERS: PageView is too loose to optimise a cold
+      // campaign on and Schedule is far too sparse at this budget (~1/day).
+      // Lead sits in between and is the event the ad set graduates onto once
+      // ~20-30 have banked. Without this listener the pixel never learns what
+      // an application looks like. See plans/2026-08-02-construction-vsl-launch.md.
+      //
+      // Fires for QUALIFIED AND DISQUALIFIED alike — both completed the form,
+      // and Meta should learn the shape of "person who applies". The split
+      // shows up separately: qualified land on GHL's calendar, disqualified
+      // land on /thanks (PageView only, deliberately no second Lead).
+      //
+      // Best effort by design. Tally redirects the top window immediately
+      // after this message, so the browser may unload before the pixel
+      // request flushes. fbq uses sendBeacon where available, which usually
+      // survives. Do NOT try to delay the redirect to "make it reliable" —
+      // a stalled redirect costs a real booking, a missed Lead costs a data
+      // point. Treat Lead counts as a floor, not an exact number.
+      window.addEventListener('message', function(e){
+        if(!/tally\.so$/.test((function(){ try{ return new URL(e.origin).hostname; }catch(_){ return ''; } })())) return;
+        var d = e.data;
+        if(typeof d === 'string'){ try{ d = JSON.parse(d); }catch(_){ return; } }
+        if(d && d.event === 'Tally.FormSubmitted' && typeof fbq === 'function'){
+          fbq('track', 'Lead');
+        }
+      });
     } else if(/calendly\.com/.test(b)){
       const src = b + (b.includes('?')?'&':'?') + 'hide_gdpr_banner=1&background_color=101010&text_color=f2f2f2&primary_color=dc2626';
       host.innerHTML = '<iframe src="'+src+'" title="Book a call" loading="lazy" style="min-height:700px"></iframe>';
