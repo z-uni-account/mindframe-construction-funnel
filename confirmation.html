@@ -16,14 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-<!-- ██ META PIXEL — PAUSED 2026-08-09 (Z). TURN BACK ON BEFORE LAUNCH. ██
-     Inert, not deleted: the script tag is type="text/plain" so it never runs,
-     and the <noscript> fallback is commented out. This page sends Meta nothing
-     right now, including the Schedule event.
-
-     TO RE-ENABLE (before spending on ads): change the script tag back to
-     plain <script>, uncomment the <noscript> block, do the same on index.html,
-     redeploy, then confirm PageView + Schedule in Meta Events Manager.
+<!-- Meta Pixel — LIVE. Paused 2026-08-09, turned back on 2026-08-10 (Z).
+     To pause again: set the script tag to type="text/plain" and comment out
+     the <noscript> block, then do the same on index.html.
 
      Meta Pixel — Mindframe Construction Pixel (1611734647006601).
      This page is only reachable after a booking (GHL calendar redirect), so
@@ -31,7 +26,7 @@
      NOTE: sending the signal is not the same as optimising on it. Do NOT
      switch the ad set to optimise for Schedule until booked volume holds
      (~15/wk) — see memory meta_booked_schedule_capi + ads-bible §6. -->
-<script type="text/plain" data-pixel-paused="2026-08-09">
+<script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -44,11 +39,9 @@ fbq('init', '1611734647006601');
 fbq('track', 'PageView');
 fbq('track', 'Schedule');
 </script>
-<!-- PAUSED 2026-08-09, uncomment with the script above:
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /></noscript>
--->
-<!-- End Meta Pixel (paused) -->
+<!-- End Meta Pixel -->
 
 <!-- ═══════════════════════════════════════════════════════════════════════
      MINDFRAME CONSTRUCTION — POST-BOOKING CONFIRMATION PAGE
@@ -166,6 +159,14 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     transition:background .16s ease,transform .16s ease}
   .reel__sound:hover{background:var(--accent);transform:scale(1.06)}
   .reel figcaption{margin-top:11px;font-size:13px;color:var(--text-muted);text-align:center;line-height:1.45}
+
+  /* ── "GO LOOK ME UP" LINE (under the breakouts) ─────────── */
+  .ig-line{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+    margin-top:34px;font-size:14px;color:var(--text-muted);text-align:center}
+  .ig-link{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--text);
+    border:1px solid var(--border);background:var(--surface);padding:8px 15px;border-radius:100px;
+    transition:border-color .16s ease,background .16s ease}
+  .ig-link:hover{border-color:var(--accent);background:var(--accent-glow)}
   @media(max-width:560px){
     /* Sideways on a phone. Three stacked 9:16 tiles is a wall of scrolling. */
     .reels{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;max-width:none;
@@ -422,6 +423,20 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         <p>Short and to the point. Pick what you care about, skip what you don't.</p>
       </div>
       <div class="bk-grid" id="bkGrid"></div>
+
+      <!-- Breakout 6 ends on "go to my Instagram and look me up." Hand them the
+           handle instead of making them search and land on the wrong account.
+           ⚠️ @goatarreola is still mid-conversion from marketer/tattoo content to
+           a construction page (the same gate that is holding back the follow-ad
+           spend, construction/follow-ad-scripts.md). Z chose to link it anyway,
+           2026-08-10. If the profile still reads wrong, pull this line first. -->
+      <div class="ig-line">
+        <span>Doing your homework, like the last video said? Start here.</span>
+        <a class="ig-link" href="https://www.instagram.com/goatarreola/" target="_blank" rel="noopener noreferrer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+          @goatarreola
+        </a>
+      </div>
     </div>
   </section>
 
