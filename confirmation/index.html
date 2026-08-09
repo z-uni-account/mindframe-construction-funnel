@@ -6,6 +6,11 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>You're Booked | Mindframe Media</title>
 <meta name="description" content="Your call is booked. Here is what happens next." />
+<!-- Favicon only, no share card. This page is noindex and only reachable
+     after a booking, so there is nothing here worth sharing a preview of. -->
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
 <meta name="theme-color" content="#080808" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -40,10 +45,17 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
 
      ┌─────────────────────────────────────────────────────────────────────┐
      │  TO GO LIVE, EDIT ONLY THE  CONFIG  BLOCK AT THE BOTTOM.             │
-     │   1. mainVideoUrl        → the 3-5 min "due diligence" video         │
-     │   2. breakouts[].url     → each 1-3 min breakout video               │
+     │   1. mainVideoId         → Vidalytics Vid ID of the "start here" cut │
+     │   2. breakouts[].vidId   → Vidalytics Vid ID of each breakout        │
      │   3. addDecisionMakerUrl → GHL guest link / calendar link (optional) │
-     │  Videos accept YouTube / Vimeo / Wistia links. Empty = placeholder.  │
+     │                                                                      │
+     │  A Vid ID is the code in the embed snippet Vidalytics gives you:     │
+     │    vidalytics_embed_BqowP6uVrPPVM_fd   →   BqowP6uVrPPVM_fd          │
+     │  Paste ONLY that code. The page builds the rest of the embed itself. │
+     │  (A YouTube / Vimeo / Wistia link still works via `url` instead.)    │
+     │                                                                      │
+     │  A breakout with no vidId and no url is HIDDEN, not shown as an      │
+     │  empty box, so the page is always safe to have live mid-batch.       │
      └─────────────────────────────────────────────────────────────────────┘
 
      WIRING (after this page is deployed):
@@ -171,6 +183,9 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     box-shadow:0 30px 80px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.03),
       0 0 60px -10px var(--accent-glow);background:var(--surface)}
   .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  /* Vidalytics sets its own 56.25% padding-top on its embed div, so the frame
+     must not also force an aspect-ratio or the two fight and the player clips. */
+  .video-frame--live{aspect-ratio:auto}
   .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
     justify-content:center;gap:16px;
     background:
@@ -186,11 +201,16 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
 
   /* ── BREAKOUT GRID ─────────────────────────────────────── */
   .bk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  /* Fewer than 3 live breakouts: 2 up, centred, so the row doesn't sit lopsided.
+     The mobile queries below re-stack it (they come later in the sheet, so they win). */
+  .bk-grid--few{grid-template-columns:repeat(2,1fr);max-width:760px;margin:0 auto}
   .bk{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;
     background:var(--surface);display:flex;flex-direction:column}
   .bk__frame{position:relative;aspect-ratio:16/9;border-bottom:1px solid var(--border);
     background:radial-gradient(ellipse at 50% 40%,rgba(220,38,38,.1),transparent 70%),
       linear-gradient(160deg,#141414,#0b0b0b)}
+  /* Same Vidalytics padding-top conflict as the main frame. */
+  .bk__frame--live{aspect-ratio:auto}
   .bk__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .bk__ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
   .bk__play{width:48px;height:48px;border-radius:50%;background:var(--accent);
@@ -347,16 +367,17 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
             <div class="video-ph__play">
               <svg width="24" height="28" viewBox="0 0 26 30" fill="none"><path d="M25 13.27a2 2 0 0 1 0 3.46L3 29.46A2 2 0 0 1 0 27.73V2.27A2 2 0 0 1 3 .54l22 12.73Z" fill="#fff"/></svg>
             </div>
-            <div class="video-ph__label">Main Video &middot; 3-5 min</div>
-            <div class="video-ph__note">Paste the link into <b>CONFIG.mainVideoUrl</b> and it appears here.</div>
+            <div class="video-ph__label">Main Video</div>
+            <div class="video-ph__note">Paste the Vidalytics Vid ID into <b>CONFIG.mainVideoId</b> and it appears here.</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ BREAKOUT VIDEOS ══ -->
-  <section class="block divide">
+  <!-- ══ BREAKOUT VIDEOS ══
+       Whole section hides itself if no breakout has a video yet. -->
+  <section class="block divide" id="bkSection">
     <div class="container">
       <div class="section-head">
         <div class="eyebrow">Your questions, answered</div>
@@ -416,25 +437,42 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
 ═══════════════════════════════════════════════════════════════════════ */
 const CONFIG = {
 
-  // 1) MAIN VIDEO (3-5 min, "let me help you do your due diligence").
-  //    Paste a YouTube / Vimeo / Wistia link. Leave "" for the placeholder.
+  // Vidalytics account the videos live in. Same account as the VSL on index.html.
+  vidalyticsAccount: "JwcAQOTG",
+
+  // 1) MAIN VIDEO — "start here", the due-diligence framing + menu of the rest.
+  //    Filmed 2026-08-09, 0:39. File: Construction PostConf 1 - MAIN - Start Here.mp4
+  //    Paste its Vidalytics Vid ID here. (Or use mainVideoUrl for YouTube/Vimeo.)
+  mainVideoId: "fq5BTiM5OPanugIi",   // uploaded 2026-08-09
   mainVideoUrl: "",
 
-  // 2) BREAKOUT VIDEOS (1-3 min each). Fill each `url` as the videos get filmed.
-  //    Titles/descriptions are locked to the scripts; edit only if the script changes.
+  // 2) BREAKOUT VIDEOS, in page order. `n` is the script's breakout number in
+  //    construction/vsl-scripts.md, kept so the page and the scripts stay traceable.
+  //    Anything with no vidId and no url is hidden until it's filmed.
+  //    Filmed status as of 2026-08-09: 5 and 7 done, 2 / 3 / 4 still to shoot.
   breakouts: [
-    { title: "Why we don't have 50 construction case studies yet",
-      desc: "The honest answer, and why it works in your favor.", duration: "1:30", url: "" },
-    { title: "How the whole system actually works",
-      desc: "Ad to booked project, start to finish. No black box.", duration: "2:00", url: "" },
-    { title: "What makes us different from every agency",
-      desc: "Why this isn't the pitch you've heard five times.", duration: "1:30", url: "" },
-    { title: "What happens on our call",
-      desc: "Exactly how the call goes, so you walk in ready.", duration: "1:30", url: "" },
-    { title: "What to have ready for the call",
-      desc: "Three numbers that make the call worth your time.", duration: "1:00", url: "" },
-    { title: "Why only three pilot spots",
-      desc: "The real reason we're capping it. No fake scarcity.", duration: "1:00", url: "" },
+    { n: 2, title: "How the whole thing actually works",
+      desc: "Ad to a homeowner on your phone, start to finish. No black box.",
+      duration: "2:00", vidId: "", url: "" },
+
+    { n: 3, title: "What makes me different from every agency",
+      desc: "Why this isn't the pitch you've already heard five times.",
+      duration: "1:30", vidId: "", url: "" },
+
+    { n: 4, title: "What happens on our call",
+      desc: "Exactly how the call goes, so you walk in knowing.",
+      duration: "1:30", vidId: "", url: "" },
+
+    // Filmed as ONE video: what to prepare, then the honest reason for three spots.
+    // File: Construction PostConf 5 - What To Have Ready + Why Only Three.mp4
+    { n: 5, title: "What to have ready, and why only three",
+      desc: "The numbers to bring, and the real reason I'm capping it at three.",
+      duration: "0:47", vidId: "1Tl22PzO4n1Fgim8", url: "" },
+
+    // File: Construction PostConf 6 - What You Will Find If You Research Me.mp4
+    { n: 7, title: "What you'll find if you research me",
+      desc: "Look me up before we talk. Here's what you will and won't find.",
+      duration: "0:52", vidId: "FtWIVv2IEdYtbcUM", url: "" },
   ],
 
   // 3) ADD A DECISION-MAKER. A GHL guest link, a booking link, or leave "" to
@@ -459,31 +497,69 @@ const CONFIG = {
     return url; // Wistia or already-embeddable
   }
 
+  /* ---- Vidalytics ---------------------------------------------------
+     Vidalytics is not an iframe, it's a div plus its own loader script,
+     so it cannot go through toEmbed(). This is Vidalytics' own embed
+     snippet, kept byte-for-byte and templated on the Vid + account id:
+     mounting one is exactly the same as pasting their code by hand.
+     Same approach as the VSL on index.html. Several per page is fine. */
+  const VID_SNIPPET = `(function (v, i, d, a, l, y, t, c, s) {
+      y='_'+d.toLowerCase();c=d+'L';if(!v[d]){v[d]={};}if(!v[c]){v[c]={};}if(!v[y]){v[y]={};}var vl='Loader',vli=v[y][vl],vsl=v[c][vl + 'Script'],vlf=v[c][vl + 'Loaded'],ve='Embed';
+      if (!vsl){vsl=function(u,cb){
+          if(t){cb();return;}s=i.createElement("script");s.type="text/javascript";s.async=1;s.src=u;
+          if(s.readyState){s.onreadystatechange=function(){if(s.readyState==="loaded"||s.readyState=="complete"){s.onreadystatechange=null;vlf=1;cb();}};}else{s.onload=function(){vlf=1;cb();};}
+          i.getElementsByTagName("head")[0].appendChild(s);
+      };}
+      vsl(l+'loader.min.js',function(){if(!vli){var vlc=v[c][vl];vli=new vlc();}vli.loadScript(l+'player.min.js',function(){var vec=v[d][ve];t=new vec();t.run(a);});});
+  })(window, document, 'Vidalytics', 'vidalytics_embed___VID__', 'https://fast.vidalytics.com/embeds/__ACCT__/__VID__/');`;
+
+  function vidDiv(vid){
+    return '<div id="vidalytics_embed_'+vid+'" style="width:100%;position:relative;padding-top:56.25%"></div>';
+  }
+  // Call only once the div is already in the DOM.
+  function vidMount(vid){
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.text = VID_SNIPPET.split('__VID__').join(vid).split('__ACCT__').join(CONFIG.vidalyticsAccount);
+    document.body.appendChild(s);
+  }
+
   // ---- main video ----
+  const mainFrame = document.getElementById('mainVideo');
   const mv = toEmbed(CONFIG.mainVideoUrl);
-  if(mv){
-    document.getElementById('mainVideo').innerHTML =
+  if(CONFIG.mainVideoId){
+    mainFrame.className = 'video-frame video-frame--live';
+    mainFrame.innerHTML = vidDiv(CONFIG.mainVideoId);
+    vidMount(CONFIG.mainVideoId);
+  } else if(mv){
+    mainFrame.innerHTML =
       '<iframe src="'+mv+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Main video"></iframe>';
   }
 
-  // ---- breakout grid ----
+  // ---- breakout grid (unfilmed ones are dropped, never shown empty) ----
   const grid = document.getElementById('bkGrid');
-  const play = '<div class="bk__ph"><div class="bk__play">'
-    + '<svg width="16" height="19" viewBox="0 0 26 30" fill="none"><path d="M25 13.27a2 2 0 0 1 0 3.46L3 29.46A2 2 0 0 1 0 27.73V2.27A2 2 0 0 1 3 .54l22 12.73Z" fill="#fff"/></svg>'
-    + '</div></div>';
-  grid.innerHTML = (CONFIG.breakouts||[]).map(function(b){
-    const e = toEmbed(b.url);
-    const frame = e
-      ? '<iframe src="'+e+'" allow="fullscreen; picture-in-picture" allowfullscreen title="'+b.title+'"></iframe>'
-      : play;
-    return '<div class="bk">'
-      + '<div class="bk__frame">'+frame+'</div>'
-      + '<div class="bk__body">'
-      + '<span class="bk__dur">'+b.duration+'</span>'
-      + '<div class="bk__title">'+b.title+'</div>'
-      + '<div class="bk__desc">'+b.desc+'</div>'
-      + '</div></div>';
-  }).join('');
+  const live = (CONFIG.breakouts||[]).filter(function(b){ return b.vidId || b.url; });
+  const bkSection = document.getElementById('bkSection');
+  if(!live.length){
+    if(bkSection) bkSection.style.display = 'none';
+  } else {
+    if(live.length < 3) grid.classList.add('bk-grid--few');
+    grid.innerHTML = live.map(function(b){
+      const e = b.vidId ? null : toEmbed(b.url);
+      const frame = b.vidId
+        ? '<div class="bk__frame bk__frame--live">'+vidDiv(b.vidId)+'</div>'
+        : '<div class="bk__frame"><iframe src="'+e+'" allow="fullscreen; picture-in-picture" allowfullscreen title="'+b.title+'"></iframe></div>';
+      return '<div class="bk">'
+        + frame
+        + '<div class="bk__body">'
+        + '<span class="bk__dur">'+b.duration+'</span>'
+        + '<div class="bk__title">'+b.title+'</div>'
+        + '<div class="bk__desc">'+b.desc+'</div>'
+        + '</div></div>';
+    }).join('');
+    // Divs exist now, so the players can be mounted.
+    live.forEach(function(b){ if(b.vidId) vidMount(b.vidId); });
+  }
 
   // ---- decision-maker button + support email ----
   const dm = document.getElementById('dmBtn');
