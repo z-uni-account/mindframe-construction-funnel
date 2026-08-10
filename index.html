@@ -796,7 +796,43 @@ const CONFIG = {
       // Tally: use the official embed script → auto-resizes to each step (no empty gaps)
       // and redirects the TOP window on completion (so the booking page opens full-screen).
       const id = (b.match(/tally\.so\/(?:r|embed)\/([\w-]+)/)||[])[1];
-      const src = "https://tally.so/embed/"+id+"?hideTitle=1&transparentBackground=1";
+
+      // ---- Ad attribution handoff ----
+      // The application is a CROSS-ORIGIN IFRAME. Tally fills its hidden fields from the
+      // IFRAME's own query string, NOT the parent page's — so unless we copy the params
+      // across explicitly, every hidden field (ad_id, utm_*, fbclid) submits EMPTY and we
+      // cannot tell which ad produced a booked call. That was the state until 2026-08-10.
+      //
+      // Names must match the Tally hidden fields on form zxO8l8 EXACTLY, and the Meta
+      // ad-level URL parameters must set them. Convention is inherited from the tattoo
+      // funnel so both verticals report the same way:
+      //     utm_content = Meta AD id      utm_term = Meta ADSET id
+      // `ad_id` / `adset_id` / `campaign_id` are captured too as a readable belt-and-braces.
+      // `fbclid` is appended by Meta itself on the click; it is the click id replayed as
+      // `fbc` on CAPI events, which is what makes booked calls attributable.
+      //
+      // Stored in sessionStorage so the params survive a reload or a scroll-away-and-back
+      // within the visit. LATEST click wins (a fresh ?ad_id overwrites the stored one),
+      // matching Meta's own last-click model — do not "fix" this to first-touch.
+      const ATTRIB_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term',
+                           'ad_id','adset_id','campaign_id','placement','fbclid'];
+      const attrib = (function(){
+        let store = {};
+        try { store = JSON.parse(sessionStorage.getItem('mf_attrib') || '{}'); } catch(_){}
+        const q = new URLSearchParams(location.search);
+        ATTRIB_KEYS.forEach(function(k){
+          const v = q.get(k);
+          if (v) store[k] = v;
+        });
+        try { sessionStorage.setItem('mf_attrib', JSON.stringify(store)); } catch(_){}
+        return store;
+      })();
+
+      let qs = "hideTitle=1&transparentBackground=1";
+      ATTRIB_KEYS.forEach(function(k){
+        if (attrib[k]) qs += "&" + encodeURIComponent(k) + "=" + encodeURIComponent(attrib[k]);
+      });
+      const src = "https://tally.so/embed/"+id+"?"+qs;
       host.innerHTML = '<iframe data-tally-src="'+src+'" loading="lazy" width="100%" height="640" frameborder="0" marginheight="0" marginwidth="0" title="Apply and book"></iframe>';
       const s=document.createElement('script'); s.src="https://tally.so/widgets/embed.js";
       s.onload=function(){ if(window.Tally) Tally.loadEmbeds(); };
