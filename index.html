@@ -731,9 +731,14 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         <span>&nbsp;&nbsp;&copy; <span id="year">2026</span> Mindframe Media. All rights reserved.</span>
       </div>
       <div class="foot__links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="mailto:hello@mindframemedia.com">hello@mindframemedia.com</a>
+        <!-- Privacy Policy is a REAL page now (/privacy). It is not decoration: Meta
+             requires a working privacy-policy URL on the instant lead form, and the old
+             href="#" plus the hello@mindframemedia.com address were both dead - that
+             domain does not resolve. Terms of Service was removed rather than left
+             pointing at "#"; a dead link on a page selling a five-figure engagement is
+             the same class of credibility leak as the old github.io URL. -->
+        <a href="/privacy">Privacy Policy</a>
+        <a href="mailto:jonathan@mindframeconstruction.com">jonathan@mindframeconstruction.com</a>
       </div>
     </div>
   </footer>

@@ -589,9 +589,10 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         <span>&nbsp;&nbsp;&copy; <span id="year">2026</span> Mindframe Media. All rights reserved.</span>
       </div>
       <div class="foot__links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="mailto:hello@mindframemedia.com" id="footMail">hello@mindframemedia.com</a>
+        <!-- Matches index.html: real /privacy page, dead Terms link removed, dead
+             hello@mindframemedia.com replaced. That domain does not resolve. -->
+        <a href="/privacy">Privacy Policy</a>
+        <a href="mailto:jonathan@mindframeconstruction.com" id="footMail">jonathan@mindframeconstruction.com</a>
       </div>
     </div>
   </footer>
@@ -644,8 +645,10 @@ const CONFIG = {
   //    fall back to a "forward your invite" email prompt.
   addDecisionMakerUrl: "",
 
-  // Contact email used on the page.
-  supportEmail: "hello@mindframemedia.com",
+  // Contact email used on the page. NOT an @mindframemedia.com address - that
+  // domain does not resolve, so every "email us" prompt on this page bounced.
+  // This one is the live Porkbun forward into the team inbox.
+  supportEmail: "jonathan@mindframeconstruction.com",
 };
 
 /* ─── engine (no need to edit below) ─────────────────────────────────── */
