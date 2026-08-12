@@ -972,5 +972,60 @@ const CONFIG = {
   })();
 })();
 </script>
+
+<!-- Clarity video-progress tagging (clarity-video-progress) — added 2026-08-13.
+     Clarity CANNOT record the video itself (it replays DOM, and video frames are not DOM).
+     This tags the session with watch depth so recordings can be filtered by it.
+     Reads the <video> element directly rather than Vidalytics' own event bus: those events
+     do NOT dispatch on window or document (tested), the element does. -->
+<script>
+(function(){
+  if (typeof window.clarity !== 'function') return;      // Clarity absent, do nothing
+  var MILESTONES = [10, 25, 50, 75, 90, 100];
+  var hit = {}, played = false, tries = 0;
+
+  function tag(k, v){ try { window.clarity('set', k, String(v)); } catch(e){} }
+
+  function attach(v){
+    v.addEventListener('play', function(){
+      if (played) return;
+      played = true;
+      tag('video', 'played');
+    });
+    v.addEventListener('timeupdate', function(){
+      if (!v.duration || !isFinite(v.duration)) return;
+      var pct = (v.currentTime / v.duration) * 100;
+      for (var i = 0; i < MILESTONES.length; i++){
+        var m = MILESTONES[i];
+        if (pct >= m && !hit[m]){ hit[m] = 1; tag('video_progress', m); }
+      }
+    });
+    // A seek past a milestone still counts as reaching it — the scrubber is enabled on
+    // this player on purpose, so jumping ahead is normal viewer behaviour, not a cheat.
+  }
+
+  // Vidalytics injects the player asynchronously. Poll for up to ~30s, then give up quietly.
+  var poll = setInterval(function(){
+    var v = document.querySelector('video');
+    if (v){ clearInterval(poll); attach(v); }
+    else if (++tries > 60){ clearInterval(poll); }
+  }, 500);
+
+  // Distinguish "never pressed play" from "no data". Fires on tab hide / close, which is
+  // the only reliable moment on mobile — 'unload' does not run on iOS Safari.
+  var sent = false;
+  function finalise(){
+    if (sent) return;
+    sent = true;
+    if (!played) tag('video', 'never_played');
+  }
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'hidden') finalise();
+  });
+  window.addEventListener('pagehide', finalise);
+})();
+</script>
+<!-- End Clarity video-progress tagging -->
+
 </body>
 </html>
