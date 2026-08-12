@@ -982,17 +982,24 @@ const CONFIG = {
 (function(){
   if (typeof window.clarity !== 'function') return;      // Clarity absent, do nothing
   var MILESTONES = [10, 25, 50, 75, 90, 100];
+  var PLAY_PROOF_SECONDS = 3;
   var hit = {}, played = false, tries = 0;
 
   function tag(k, v){ try { window.clarity('set', k, String(v)); } catch(e){} }
 
   function attach(v){
-    v.addEventListener('play', function(){
-      if (played) return;
-      played = true;
-      tag('video', 'played');
-    });
+    // ⚠️ Do NOT tag on the 'play' EVENT. Vidalytics calls .play() itself on page load, so
+    // that event fires for essentially every visitor whether or not a frame ever rendered
+    // (verified live 2026-08-13: paused === false immediately on a fresh load, with no
+    // click and no autoplay attribute). Tagging it would make "played" mean "the page
+    // loaded", and "never_played" would almost never fire — a metric that always says the
+    // same thing is worse than no metric.
+    // Real playback = the clock actually advanced past PLAY_PROOF_SECONDS.
     v.addEventListener('timeupdate', function(){
+      if (!played && v.currentTime >= PLAY_PROOF_SECONDS){
+        played = true;
+        tag('video', 'played');
+      }
       if (!v.duration || !isFinite(v.duration)) return;
       var pct = (v.currentTime / v.duration) * 100;
       for (var i = 0; i < MILESTONES.length; i++){
