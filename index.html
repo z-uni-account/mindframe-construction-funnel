@@ -1006,7 +1006,7 @@ const CONFIG = {
 
   // Vidalytics injects the player asynchronously. Poll for up to ~30s, then give up quietly.
   var poll = setInterval(function(){
-    var v = document.querySelector('video');
+    var v = document.querySelector('#videoFrame video, [id^="vidalytics_embed"] video');
     if (v){ clearInterval(poll); attach(v); }
     else if (++tries > 60){ clearInterval(poll); }
   }, 500);
