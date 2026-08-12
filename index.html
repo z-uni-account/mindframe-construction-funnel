@@ -61,6 +61,23 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /></noscript>
 <!-- End Meta Pixel -->
 
+<!-- Microsoft Clarity — session recordings + heatmaps, construction funnel.
+     Installed 2026-08-13 to answer: people land on this page and do not start the
+     application. Clarity shows scroll depth, dead/rage clicks and where they leave.
+     ⚠️ It CANNOT see inside the Tally application — that is a cross-origin iframe.
+     For in-form drop-off use Tally's own insights (form zxO8l8), not Clarity.
+     Text input masking is left at Clarity's default (masked). Do not turn it off:
+     unmasked recording would capture typed contact details. -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "y1e796l0y5");
+</script>
+<!-- End Microsoft Clarity -->
+
+
 <!-- ═══════════════════════════════════════════════════════════════════════
      E3 GROWTH — VSL FUNNEL PAGE
      Single self-contained file. Host anywhere (Netlify drop, GitHub Pages, etc).
