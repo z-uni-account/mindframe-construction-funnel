@@ -148,6 +148,13 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
   .hero__sub{font-size:clamp(1rem,2.4vw,1.22rem);color:var(--text-muted);
     max-width:680px;margin:0 auto 8px;font-weight:400}
   .hero__sub b{color:var(--text);font-weight:600}
+  /* Hero CTA — added 2026-08-13. See the funnel README: the old "no top CTA" rule is
+     SUPERSEDED. Clarity measured 12.84% average scroll depth and 5s active time, so the
+     application below the video was never being SEEN, which is why it had zero starts
+     in its entire life. This is the shortcut to it. DO NOT REMOVE. */
+  .hero__cta{margin-top:26px}
+  .hero__cta .btn{padding:17px 40px}
+  @media (max-width:520px){ .hero__cta .btn{width:100%;justify-content:center} }
   /* Scarcity line: plain statement of fact, sits directly above the video.
      Deliberately NOT a banner, countdown or urgency widget - the constraint
      is real, so it reads stronger stated flat. */
@@ -190,6 +197,7 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
     background:#3a3a3a;cursor:pointer;transition:background .3s,width .3s}
   .about__dots button[aria-selected="true"]{background:var(--accent);width:20px;border-radius:100px}
   @media (prefers-reduced-motion:reduce){.about__track{transition:none}}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   /* Left-aligned on purpose: centred text reads like a slogan, a note reads
      like a person talking. */
   .about__copy{max-width:600px;margin:0 auto;text-align:left}
@@ -430,6 +438,17 @@ src="https://www.facebook.com/tr?id=1611734647006601&ev=PageView&noscript=1" /><
         We run the ads, vet every homeowner before they reach you, and warm them before
         the inspection. You spend your time <b>bidding real projects with real budgets</b>.
       </p>
+
+      <!-- APPLY NOW — above the fold, scrolls to the #book section on this same page.
+           Added 2026-08-13 on Z's instruction. This REVERSES the "no nav CTA / no sticky
+           CTA, settled twice" rule, which was decided before we had any page data. The
+           data: scroll depth 12.84%, active time 5 seconds, VSL average watched 9.53%,
+           and ZERO form starts ever. Nobody reached the application, so nobody applied.
+           The trade (some people apply without watching, shows may soften) is ACCEPTED —
+           revisit only on real booked-call data, never on zero applications. -->
+      <div class="hero__cta">
+        <a class="btn" id="heroApply" href="#book">Apply Now &rarr;</a>
+      </div>
 
       <!-- VIDEO
            LIVE: Vidalytics — "Jonathan VSL 2 (Construction)" (2:35, 1920x1080).
@@ -1030,6 +1049,11 @@ const CONFIG = {
     if (document.visibilityState === 'hidden') finalise();
   });
   window.addEventListener('pagehide', finalise);
+
+  // Hero CTA usage. The whole point of the button is testable: if nobody clicks it, the
+  // problem was never reachability. Tagged, not just assumed.
+  var cta = document.getElementById('heroApply');
+  if (cta) cta.addEventListener('click', function(){ tag('cta', 'hero_apply'); });
 })();
 </script>
 <!-- End Clarity video-progress tagging -->
