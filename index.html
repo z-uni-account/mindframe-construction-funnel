@@ -801,10 +801,19 @@ const CONFIG = {
   // 3) CLIENT LOGOS shown in the trust strip. Drop image files in  assets/logos/
   //    then list them here (path + name). Leave [] to keep the placeholder slots.
   //    Example: [{src:"assets/logos/acme.png", alt:"Acme"}, ...]
-  logos: [
-    {src:"assets/logos/e3-logo.png", alt:"E3"},
-    {src:"assets/logos/questms-construction.jpg", alt:"Quest MS Construction"},
-  ],
+  // ⚠️ EMPTIED 2026-08-13, deliberately. The strip ran with exactly TWO logos in a
+  //    full-width band sized for six, and the two did not even match visually (E3 is a
+  //    transparent PNG, Quest carried its own black rounded-square background). Z called
+  //    it, Jeremy AI agreed: "two mismatched logos in a band sized for six reads as 'we
+  //    have two clients and we're pretending it's a portfolio.' That's worse than silence.
+  //    Silence is neutral. Two logos is actively signaling scarcity."
+  //    It also sat BELOW the application, so it could never influence the decision it was
+  //    meant to support — and at 12.84% scroll depth almost nobody reached it anyway.
+  //    The engine below removes the whole section when this array is empty, which is the
+  //    behaviour we want. Assets stay in assets/logos/ for the page rewrite, where proof
+  //    belongs directly ABOVE the application. See
+  //    plans/2026-08-13-construction-page-conversion-fix.md.
+  logos: [],
 };
 
 /* ─── engine (no need to edit below) ─────────────────────────────────── */
